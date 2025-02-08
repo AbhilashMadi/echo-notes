@@ -9,7 +9,7 @@
       "node"
     ],
     "jsx": "react-jsx",
-    "jsxImportSource": "hono/jsx",
+    "jsxImportSource": "react",
     "baseUrl": ".",
     "paths": {
       "@/*": [
