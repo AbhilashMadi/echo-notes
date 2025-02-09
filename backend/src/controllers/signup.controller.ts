@@ -27,7 +27,7 @@ export default async (c: Context) => {
     if (existingUser && existingUser.emailVerified) {
       return c.json(
         responseHandler(false, "Email already verified, please login.", null),
-        StatusCodes.BAD_REQUEST
+        StatusCodes.CONFLICT
       );
     }
 
@@ -53,7 +53,7 @@ export default async (c: Context) => {
       httpOnly: true,
       secure: envConfig.NODE_ENV === "production",
       sameSite: "Strict",
-      maxAge: getExpirationTime(envConfig.VERIFICATION_TOKEN_EXP),
+      maxAge: getExpirationTime(envConfig.VERIFICATION_TOKEN_EXP, "s"),
     });
 
     // Send OTP to user's email
@@ -65,6 +65,6 @@ export default async (c: Context) => {
     );
   } catch (error) {
     console.error("Signup Error:", error);
-    return c.json(responseHandler(false, "Internal Server Error", null), StatusCodes.INTERNAL_SERVER_ERROR);
+    throw error;
   }
 };

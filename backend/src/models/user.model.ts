@@ -34,7 +34,16 @@ const UserSchema = new Schema<IUser>(
       default: false, // Default to false until verification
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true, toJSON: {
+      transform: (_, ret) => {
+        // Exclude password from JSON responses
+        delete ret.password;
+        delete ret.emailVerificationOtp;
+        return ret;
+      },
+    }
+  }
 );
 
 // Hash password before saving

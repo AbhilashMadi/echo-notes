@@ -1,11 +1,13 @@
 import type { Context } from "hono";
-import { getCookie, setCookie } from "hono/cookie";
+import { deleteCookie, getCookie, setCookie } from "hono/cookie";
 import { StatusCodes } from "http-status-codes";
 import { ZodError } from "zod";
 
 import { envConfig } from "@/config/env.config.js";
 import { generateToken, verifyToken } from "@/lib/jwt.js";
+
 import User from "@/models/user.model.js";
+
 import { CookieNames } from "@/resources/cookie.resources.js";
 import { responseHandler } from "@/utils/response.js";
 import { verifyFieldSchema, verifyOtpSchema } from "@/validations/schemas/verify-otp.schema.js";
@@ -17,14 +19,14 @@ const setAuthCookies = (c: Context, accessToken: string, refreshToken: string) =
     httpOnly: true, // Prevents client-side access to the cookie (XSS protection)
     secure: envConfig.NODE_ENV === "production", // Ensures the cookie is only sent over HTTPS in production
     sameSite: "Strict", // Mitigates CSRF attacks
-    maxAge: getExpirationTime(envConfig.ACCESS_TOKEN_EXP), // Cookie expiration time
+    maxAge: getExpirationTime(envConfig.ACCESS_TOKEN_EXP, "s"), // Cookie expiration time
   });
 
   setCookie(c, CookieNames.REFRESH_TOKEN, refreshToken, {
     httpOnly: true,
     secure: envConfig.NODE_ENV === "production",
     sameSite: "Strict",
-    maxAge: getExpirationTime(envConfig.REFRESH_TOKEN_EXP),
+    maxAge: getExpirationTime(envConfig.REFRESH_TOKEN_EXP, "s"),
   });
 };
 
@@ -72,11 +74,6 @@ export default async (c: Context) => {
 
     // Handle OTP verification for different fields (Currently supporting email)
     if (field === "email") {
-      // Mark email as verified and clear OTP
-      user.emailVerificationOtp = "";
-      user.emailVerified = true;
-      await user.save();
-
       // Generate authentication tokens
       const [accessToken, refreshToken] = await Promise.all([
         generateToken(user._id as string, "access"),
@@ -85,8 +82,15 @@ export default async (c: Context) => {
 
       // Set authentication cookies
       setAuthCookies(c, accessToken, refreshToken);
+      deleteCookie(c, CookieNames.VERIFY_EMAIL_OTP);
 
-      return c.json(responseHandler(true, "Email verified successfully 👍", { user }), StatusCodes.OK);
+      // Mark email as verified and clear OTP
+      user.emailVerificationOtp = "";
+      user.emailVerified = true;
+      await user.save();
+
+      // Exclude values from user document
+      return c.json(responseHandler(true, "Email verified successfully 👍", user), StatusCodes.OK);
     }
 
     // If the verification field is not recognized
