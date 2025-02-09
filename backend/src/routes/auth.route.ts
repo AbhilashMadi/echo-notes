@@ -1,13 +1,13 @@
 import { Hono } from 'hono';
 
-import loginController from '@/controllers/login.controller.js';
-import signupController from '@/controllers/signup.controller.js';
-import verifyOtpController from "@/controllers/verify-otp.controller.js";
+import loginController from '@/controllers/auth/login.controller.js';
+import signupController from '@/controllers/auth/signup.controller.js';
+import verifyOtpController from "@/controllers/auth/verify-otp.controller.js";
+import refreshTokenController from "@/controllers/auth/refresh-token.controller.js";
 
 import loginSchema from "@/validations/schemas/login.schema.js";
 import signupSchema from "@/validations/schemas/signup.schema.js";
 import validateRequestDto from "@/validations/validate-request-dto.js";
-import refreshTokenController from "@/controllers/refresh-token.controller.js";
 
 const useRouter = new Hono();
 

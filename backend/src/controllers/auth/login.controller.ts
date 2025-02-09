@@ -3,7 +3,7 @@ import { type Context } from "hono";
 import User from "@/models/user.model.js";
 import type { LoginDto } from "@/validations/schemas/login.schema.js";
 import { responseHandler } from "@/utils/response.js";
-import { setAuthCookies } from "@/controllers/verify-otp.controller.js";
+import { setAuthCookies } from "@/controllers/auth/verify-otp.controller.js";
 import { generateToken } from "@/lib/jwt.js";
 import { StatusCodes } from "http-status-codes";
 
