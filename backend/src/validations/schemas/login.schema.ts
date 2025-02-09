@@ -1,7 +1,7 @@
 import { Regex } from '@/resources/regex.resource.js';
 import { z } from 'zod';
 
-export default z.object({
+const loginSchema = z.object({
   email: z
     .string()
     .email({ message: 'Invalid email address' }),
@@ -14,3 +14,6 @@ export default z.object({
   remember: z
     .boolean(),
 });
+
+export type LoginDto = z.infer<typeof loginSchema>;
+export default loginSchema;
