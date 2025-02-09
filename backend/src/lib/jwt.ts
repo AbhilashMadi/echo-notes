@@ -20,6 +20,7 @@ const expTimes: Readonly<Record<TokenType, string>> = {
 // Define Token Payload Interface
 interface TokenPayload extends JWTPayload {
   userId: string;
+  remember: boolean;
   role?: string;
   jti: string;
 }

@@ -15,19 +15,31 @@ import { getExpirationTime } from "@/utils/time.js";
 
 // Sets authentication cookies (Access & Refresh tokens) securely
 export const setAuthCookies = async (c: Context, accessToken: string, refreshToken: string, remember: boolean = true) => {
+  const isProd = envConfig.NODE_ENV === "production";
+
+  // Access Token
   setCookie(c, CookieNames.ACCESS_TOKEN, accessToken, {
     httpOnly: true, // Prevents client-side access to the cookie (XSS protection)
-    secure: envConfig.NODE_ENV === "production", // Ensures the cookie is only sent over HTTPS in production
+    secure: isProd, // Ensures the cookie is only sent over HTTPS in production
     sameSite: "Strict", // Mitigates CSRF attacks
     ...(remember ? { maxAge: getExpirationTime(envConfig.ACCESS_TOKEN_EXP, "s") } : {}),
   });
 
+  // Refresh Token
   setCookie(c, CookieNames.REFRESH_TOKEN, refreshToken, {
     httpOnly: true,
-    secure: envConfig.NODE_ENV === "production",
+    secure: isProd,
     sameSite: "Strict",
     ...(remember ? { maxAge: getExpirationTime(envConfig.REFRESH_TOKEN_EXP, "s") } : {}),
   });
+
+  //Auth Config
+  setCookie(c, CookieNames.AUT_CONFIG, JSON.stringify({ remember }), {
+    httpOnly: true,
+    secure: isProd,
+    sameSite: "Strict",
+    ...(remember ? { maxAge: getExpirationTime(envConfig.REFRESH_TOKEN_EXP, "s") } : {}),
+  })
 };
 
 // Handles errors in a standardized way.

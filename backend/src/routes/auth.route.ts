@@ -7,11 +7,13 @@ import verifyOtpController from "@/controllers/verify-otp.controller.js";
 import loginSchema from "@/validations/schemas/login.schema.js";
 import signupSchema from "@/validations/schemas/signup.schema.js";
 import validateRequestDto from "@/validations/validate-request-dto.js";
+import refreshTokenController from "@/controllers/refresh-token.controller.js";
 
 const useRouter = new Hono();
 
 useRouter.post('/login', validateRequestDto(loginSchema), loginController);
 useRouter.post('/signup', validateRequestDto(signupSchema), signupController);
 useRouter.post('/verify/:field', verifyOtpController);
+useRouter.post('/refresh-token', refreshTokenController);
 
 export default useRouter;
