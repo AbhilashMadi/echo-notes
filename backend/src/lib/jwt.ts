@@ -12,9 +12,9 @@ const secretKeys: Readonly<Record<TokenType, Uint8Array>> = {
 };
 
 const expTimes: Readonly<Record<TokenType, string>> = {
-  access: envConfig.ACCESS_TOKEN_EXP,
-  refresh: envConfig.REFRESH_TOKEN_EXP,
-  verification: envConfig.VERIFICATION_TOKEN_EXP,
+  access: envConfig.ACCESS_TOKEN_EXP, //15m
+  refresh: envConfig.REFRESH_TOKEN_EXP, //7d
+  verification: envConfig.VERIFIICATION_TOKEN_EXP,
 }
 
 // Define Token Payload Interface

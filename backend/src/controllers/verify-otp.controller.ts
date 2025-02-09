@@ -14,19 +14,19 @@ import { verifyFieldSchema, verifyOtpSchema } from "@/validations/schemas/verify
 import { getExpirationTime } from "@/utils/time.js";
 
 // Sets authentication cookies (Access & Refresh tokens) securely
-const setAuthCookies = (c: Context, accessToken: string, refreshToken: string) => {
+export const setAuthCookies = async (c: Context, accessToken: string, refreshToken: string, remember: boolean = true) => {
   setCookie(c, CookieNames.ACCESS_TOKEN, accessToken, {
     httpOnly: true, // Prevents client-side access to the cookie (XSS protection)
     secure: envConfig.NODE_ENV === "production", // Ensures the cookie is only sent over HTTPS in production
     sameSite: "Strict", // Mitigates CSRF attacks
-    maxAge: getExpirationTime(envConfig.ACCESS_TOKEN_EXP, "s"), // Cookie expiration time
+    ...(remember ? { maxAge: getExpirationTime(envConfig.ACCESS_TOKEN_EXP, "s") } : {}),
   });
 
   setCookie(c, CookieNames.REFRESH_TOKEN, refreshToken, {
     httpOnly: true,
     secure: envConfig.NODE_ENV === "production",
     sameSite: "Strict",
-    maxAge: getExpirationTime(envConfig.REFRESH_TOKEN_EXP, "s"),
+    ...(remember ? { maxAge: getExpirationTime(envConfig.REFRESH_TOKEN_EXP, "s") } : {}),
   });
 };
 
@@ -90,7 +90,7 @@ export default async (c: Context) => {
       await user.save();
 
       // Exclude values from user document
-      return c.json(responseHandler(true, "Email verified successfully 👍", user), StatusCodes.OK);
+      return c.json(responseHandler(true, "Email verified successfully 👍", user), StatusCodes.CREATED);
     }
 
     // If the verification field is not recognized

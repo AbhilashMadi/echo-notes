@@ -7,7 +7,6 @@ const envSchema = z.object({
 
   // Organization Details
   ORG_NAME: z.string().min(1, "ORG_NAME is required"),
-  ORG_EMAIL: z.string().email("ORG_EMAIL must be a valid email"),
 
   // Database Configuration
   MONGO_DB_URI: z.string().min(1, "MONGO_DB_URI is required"),
@@ -26,8 +25,8 @@ const envSchema = z.object({
   // Token Secrets and Expiration
   ACCESS_TOKEN_SECRET: z.string().min(1, "ACCESS_TOKEN_SECRET is required"),
   REFRESH_TOKEN_SECRET: z.string().min(1, "REFRESH_TOKEN_SECRET is required"),
-  ACCESS_TOKEN_EXP: z.string().default("15m"),
-  REFRESH_TOKEN_EXP: z.string().default("7d"),
+  ACCESS_TOKEN_EXP: z.string(),
+  REFRESH_TOKEN_EXP: z.string(),
 
   PROJECT_KEY_GENERATION_SECRET: z
     .string()
@@ -36,20 +35,24 @@ const envSchema = z.object({
   VERIFICATION_TOKEN_SECRET: z
     .string()
     .min(1, "VERIFICATION_TOKEN_SECRET is required"),
-  VERIFICATION_TOKEN_EXP: z.string().default("15m"),
+  VERIFIICATION_TOKEN_EXP: z.string(),
 
   RESET_PASSWORD_TOKEN_SECRET: z
     .string()
     .min(1, "RESET_PASSWORD_TOKEN_SECRET is required"),
-  RESET_PASSWORD_TOKEN_EXP: z.string().default("15m"),
+  RESET_PASSWORD_TOKEN_EXP: z.string(),
 
   MAGIC_URL_TOKEN_SECRET: z
     .string()
     .min(1, "MAGIC_URL_TOKEN_SECRET is required"),
-  MAGIC_URL_TOKEN_EXP: z.string().default("15m"),
+  MAGIC_URL_TOKEN_EXP: z.string(),
 
-  // Resend API Configuration
-  RESEND_API_KEY: z.string().min(1, "RESEND_API_KEY is required"),
+  // SMTP Server Credentials
+  GOOGLE_SMTP_USER: z.string()
+    .min(1, "ZOHO_SMTP_USER is missing"),
+
+  GOOGLE_SMTP_PASSWORD: z.string()
+    .min(1, "ZOHO_SMTP_PASSWORD is missing"),
 });
 
 // Validate the environment variables

@@ -40,6 +40,9 @@ const UserSchema = new Schema<IUser>(
         // Exclude password from JSON responses
         delete ret.password;
         delete ret.emailVerificationOtp;
+        delete ret._id;
+        delete ret.__v;
+
         return ret;
       },
     }

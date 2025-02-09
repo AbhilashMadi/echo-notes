@@ -9,6 +9,7 @@ import { envConfig } from '@/config/env.config.js';
 import authRoutes from '@/routes/auth.route.js';
 import { notFound, onError } from "@/utils/response.js";
 import { connectDB } from "./config/db.config.js";
+import { sendEmail } from "./config/email-client.config.js";
 
 export const app = new Hono({ strict: false });
 

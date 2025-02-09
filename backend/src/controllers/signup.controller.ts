@@ -10,11 +10,8 @@ import { StatusCodes } from "http-status-codes";
 import { CookieNames } from "@/resources/cookie.resources.js";
 import { generateToken } from "@/lib/jwt.js";
 import { getExpirationTime } from "@/utils/time.js";
-
-async function sendOTP(email: SignupSchema["email"], otp: string) {
-  console.info("Sending OTP:", { email, otp });
-  // Implement actual OTP sending via email service here
-}
+import { sendEmail } from "@/config/email-client.config.js";
+import verifyOtpTemplate from "@/templates/verify-otp.template.js";
 
 export default async (c: Context) => {
   try {
@@ -32,17 +29,17 @@ export default async (c: Context) => {
     }
 
     // Generate OTP & expiration time
-    const emailVerificationOtp = generateOTP();
+    const verificationOtp = generateOTP();
 
     let savedUser;
     if (existingUser) {
       // Update existing user's OTP and reset password
-      existingUser.emailVerificationOtp = emailVerificationOtp;
+      existingUser.emailVerificationOtp = verificationOtp;
       existingUser.password = password;
       savedUser = await existingUser.save();
     } else {
       // Create new user
-      const newUser = new User({ email, password, emailVerificationOtp });
+      const newUser = new User({ email, password, verificationOtp });
       savedUser = await newUser.save();
     }
 
@@ -53,12 +50,14 @@ export default async (c: Context) => {
       httpOnly: true,
       secure: envConfig.NODE_ENV === "production",
       sameSite: "Strict",
-      maxAge: getExpirationTime(envConfig.VERIFICATION_TOKEN_EXP, "s"),
+      maxAge: getExpirationTime(envConfig.VERIFIICATION_TOKEN_EXP, "s"),
     });
 
     // Send OTP to user's email
-    await sendOTP(email, emailVerificationOtp);
+    // If the email is not deliveried throughs an errors
+    await sendEmail("abhilashkumar1563@gmail.com", "Welcome to Our Platform 🎉", verifyOtpTemplate(verificationOtp));
 
+    // Inform client the otp is sent
     return c.json(
       responseHandler(true, "OTP sent successfully. Please verify your email.", null),
       StatusCodes.OK
