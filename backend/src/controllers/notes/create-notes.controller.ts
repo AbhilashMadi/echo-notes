@@ -2,7 +2,7 @@ import type { Context } from "hono";
 
 import { StatusCodes } from "http-status-codes";
 
-import type { CreateNoteSchema } from "@/validations/schemas/notes.schema.js";
+import type { CreateNoteDto } from "@/validations/schemas/notes.schema.js";
 
 import Note from "@/models/notes.model.js";
 import User from "@/models/user.model.js";
@@ -10,7 +10,7 @@ import { responseHandler } from "@/utils/response.js";
 
 export default async (c: Context) => {
   // Extract and validate request body
-  const note = await c.req.json<CreateNoteSchema>();
+  const note = await c.req.json<CreateNoteDto>();
   const { userId } = await c.get("user");
 
   // Verify if the user exists (Fast Existence Check)
