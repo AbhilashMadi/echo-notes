@@ -53,7 +53,7 @@ export const updateNoteSchema = z.object({
   tags: z.array(z.string()).optional(),
 }).strict();
 
-export const updateNotesParamsSchema = z.object({
+export const NotesParamsSchema = z.object({
   id: z
     .string()
     .regex(/^[a-f\d]{24}$/i, "Invalid MongoDB ObjectId")

@@ -8,9 +8,10 @@ import {
   createNoteSchema,
   getNotesQuerySchema,
   updateNoteSchema,
-  updateNotesParamsSchema,
+  NotesParamsSchema,
 } from "@/validations/schemas/notes.schema.js";
 import validateRequestDto from "@/validations/validate-request-dto.js";
+import deleteNotesController from "@/controllers/notes/delete-notes.controller.js";
 
 // Extend Hono to recognize the custom `user` property set in authMiddleware
 const useRouter = new Hono<{ Variables: { user: { userId: string } } }>();
@@ -18,6 +19,8 @@ const useRouter = new Hono<{ Variables: { user: { userId: string } } }>();
 useRouter.use(authMiddleware);
 useRouter.get("/", validateRequestDto(undefined, getNotesQuerySchema), getNotesController);
 useRouter.post("/", validateRequestDto(createNoteSchema), createNotesController);
-useRouter.patch("/:id", validateRequestDto(updateNoteSchema, undefined, updateNotesParamsSchema), updateNotesController);
+useRouter.patch("/:id", validateRequestDto(updateNoteSchema, undefined, NotesParamsSchema), updateNotesController);
+useRouter.delete("/:id", validateRequestDto(undefined, undefined, NotesParamsSchema), deleteNotesController)
+
 
 export default useRouter;
