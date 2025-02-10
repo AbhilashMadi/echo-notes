@@ -1,11 +1,13 @@
-import { type Context } from "hono";
+import type { Context } from "hono";
 
-import User from "@/models/user.model.js";
+import { StatusCodes } from "http-status-codes";
+
 import type { LoginDto } from "@/validations/schemas/login.schema.js";
-import { responseHandler } from "@/utils/response.js";
+
 import { setAuthCookies } from "@/controllers/auth/verify-otp.controller.js";
 import { generateToken } from "@/lib/jwt.js";
-import { StatusCodes } from "http-status-codes";
+import User from "@/models/user.model.js";
+import { responseHandler } from "@/utils/response.js";
 
 export default async (c: Context) => {
   try {
@@ -17,7 +19,7 @@ export default async (c: Context) => {
     if (!user) {
       return c.json(
         responseHandler(false, `No account found with the email: ${email}. Please check or register.`),
-        StatusCodes.UNAUTHORIZED
+        StatusCodes.UNAUTHORIZED,
       );
     }
 
@@ -43,7 +45,8 @@ export default async (c: Context) => {
 
     // Exclude sensitive data before sending response
     return c.json(responseHandler(true, "Login successful ✅ Welcome back!", user), StatusCodes.OK);
-  } catch (error) {
+  }
+  catch (error) {
     console.error("Login Error:", error);
     return c.json(responseHandler(false, "An unexpected error occurred while processing your login request. Please try again later."), StatusCodes.INTERNAL_SERVER_ERROR);
   }

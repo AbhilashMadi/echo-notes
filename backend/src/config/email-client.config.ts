@@ -1,5 +1,7 @@
+/* eslint-disable no-console */
 import nodemailer from "nodemailer";
-import { envConfig } from "./env.config.js";
+
+import { envConfig } from "@/config/env.config.js";
 
 // Create Transporter Configuration
 const transporter = nodemailer.createTransport({
@@ -13,15 +15,16 @@ const transporter = nodemailer.createTransport({
 });
 
 // Verify the transporter
-transporter.verify((error, success) => {
+transporter.verify((error) => {
   if (error) {
     console.error("SMTP Transporter Error:", error);
-  } else {
-    console.log("SMTP Transporter Ready ✉️");
+  }
+  else {
+    console.info("SMTP Transporter Ready ✉️");
   }
 });
 
-export const sendEmail = async (to: string, subject: string, html: string): Promise<boolean> => {
+export async function sendEmail(to: string, subject: string, html: string): Promise<boolean> {
   try {
     const info = await transporter.sendMail({
       from: `${envConfig.ORG_NAME} <${envConfig.GOOGLE_SMTP_USER}>`,
@@ -32,11 +35,12 @@ export const sendEmail = async (to: string, subject: string, html: string): Prom
 
     console.log(`Email sent successfully to ${to}:`, info.messageId);
     return true;
-  } catch (error) {
+  }
+  catch (error) {
     console.error(`Failed to send email to ${to}:`, error);
     throw error;
   }
-};
+}
 
 // Export Transporter for Advanced Use Cases
 export { transporter };

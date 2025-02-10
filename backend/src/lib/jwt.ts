@@ -1,6 +1,9 @@
+import type { JWTPayload } from "jose";
+
+import { jwtVerify, SignJWT } from "jose";
+
 import { envConfig } from "@/config/env.config.js";
 import { generateUUID } from "@/utils/generators.js";
-import { SignJWT, jwtVerify, type JWTPayload } from "jose";
 
 // Convert secrets into keys
 type TokenType = "access" | "refresh" | "verification";
@@ -12,10 +15,10 @@ const secretKeys: Readonly<Record<TokenType, Uint8Array>> = {
 };
 
 const expTimes: Readonly<Record<TokenType, string>> = {
-  access: envConfig.ACCESS_TOKEN_EXP, //15m
-  refresh: envConfig.REFRESH_TOKEN_EXP, //7d
+  access: envConfig.ACCESS_TOKEN_EXP, // 15m
+  refresh: envConfig.REFRESH_TOKEN_EXP, // 7d
   verification: envConfig.VERIFIICATION_TOKEN_EXP,
-}
+};
 
 // Define Token Payload Interface
 interface TokenPayload extends JWTPayload {
@@ -26,11 +29,7 @@ interface TokenPayload extends JWTPayload {
 }
 
 // **Reusable Function to Generate JWT**
-export const generateToken = async (
-  userId: string,
-  type: TokenType,
-  role?: string
-): Promise<string> => {
+export async function generateToken(userId: string, type: TokenType, role?: string): Promise<string> {
   return await new SignJWT({
     userId,
     role,
@@ -42,15 +41,16 @@ export const generateToken = async (
     .setProtectedHeader({ alg: "HS256" })
     .setExpirationTime(expTimes[type])
     .sign(secretKeys[type]);
-};
+}
 
 // **Reusable Function to Verify JWT**
-export const verifyToken = async (token: string, type: "access" | "refresh" | "verification"): Promise<TokenPayload | null> => {
+export async function verifyToken(token: string, type: "access" | "refresh" | "verification"): Promise<TokenPayload | null> {
   try {
     const { payload } = await jwtVerify(token, secretKeys[type]);
     return payload as TokenPayload;
-  } catch (error) {
+  }
+  catch (error) {
     console.error(`${type.toUpperCase()} Token verification failed:`, error);
     throw error;
   }
-};
+}

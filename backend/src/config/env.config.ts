@@ -56,13 +56,16 @@ const envSchema = z.object({
 });
 
 // Validate the environment variables
+
+// eslint-disable-next-line node/no-process-env
 const parsedEnv = envSchema.safeParse(process.env);
 
 if (!parsedEnv.success) {
   console.error(
     "☠️ Invalid environment configuration:",
-    JSON.stringify(parsedEnv.error.format(), null, 2)
+    JSON.stringify(parsedEnv.error.format(), null, 2),
   );
+
   process.exit(1); // Exit the app if validation fails
 }
 

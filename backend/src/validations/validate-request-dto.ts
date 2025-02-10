@@ -1,26 +1,42 @@
-import { responseHandler } from "@/utils/response.js";
-import type { Next } from "hono";
-import type { Context } from "vm";
-import { ZodSchema, ZodError } from "zod";
+import type { Context, MiddlewareHandler, Next } from "hono";
+import type { infer as ZodInfer, ZodSchema } from "zod";
 
-export default (schema: ZodSchema) => {
-  return async (c: Context, next: Next) => {
-    try {
-      // Parse and validate request body
-      const body = await c.req.json();
-      schema.parse(body);
-
-      // Proceed if validation is successful
-      return await next();
-    } catch (error) {
-      if (error instanceof ZodError) {
-        // Collect and return validation errors
-        const messages = error.issues.map((issue) => issue.message);
-        return c.json(responseHandler(false, 'Validation Error', null, { messages }));
-      }
-
-      // If not a validation error, rethrow it
-      throw error;
-    }
+// Extend Hono's Context to include validated data
+type ValidatedContext<B, Q, P> = Context<{
+  Variables: {
+    validatedBody?: B;
+    validatedQuery?: Q;
+    validatedParams?: P;
   };
-};
+}>;
+
+// Middleware for validating request body, query, and params
+function validateRequest<
+  B extends ZodSchema | undefined = undefined,
+  Q extends ZodSchema | undefined = undefined,
+  P extends ZodSchema | undefined = undefined,
+>(bodySchema?: B, querySchema?: Q, paramsSchema?: P): MiddlewareHandler {
+  return async (c: ValidatedContext<
+    B extends ZodSchema ? ZodInfer<B> : undefined,
+    Q extends ZodSchema ? ZodInfer<Q> : undefined,
+    P extends ZodSchema ? ZodInfer<P> : undefined
+  >, next: Next) => {
+    if (bodySchema) {
+      bodySchema.parse(await c.req.json());
+    }
+
+    // Validate query parameters
+    if (querySchema) {
+      querySchema.parse(c.req.query());
+    }
+
+    // Validate route parameters
+    if (paramsSchema) {
+      paramsSchema.parse(c.req.param());
+    }
+
+    return await next();
+  };
+}
+
+export default validateRequest;

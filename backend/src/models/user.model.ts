@@ -1,5 +1,7 @@
-import mongoose, { Document, Schema, Model } from "mongoose";
+import type { Document, Model } from "mongoose";
+
 import bcrypt from "bcryptjs";
+import mongoose, { Schema } from "mongoose";
 
 // Interface for User Document
 export interface IUser extends Document {
@@ -8,7 +10,7 @@ export interface IUser extends Document {
   emailVerificationOtp?: string;
   emailVerified: boolean;
 
-  matchPassword(enteredPassword: string): Promise<boolean>;
+  matchPassword: (enteredPassword: string) => Promise<boolean>;
 }
 
 // User Schema
@@ -35,7 +37,8 @@ const UserSchema = new Schema<IUser>(
     },
   },
   {
-    timestamps: true, toJSON: {
+    timestamps: true,
+    toJSON: {
       transform: (_, ret) => {
         // Exclude password from JSON responses
         delete ret.password;
@@ -45,13 +48,14 @@ const UserSchema = new Schema<IUser>(
 
         return ret;
       },
-    }
-  }
+    },
+  },
 );
 
 // Hash password before saving
 UserSchema.pre<IUser>("save", async function (next) {
-  if (!this.isModified("password")) return next();
+  if (!this.isModified("password"))
+    return next();
 
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);

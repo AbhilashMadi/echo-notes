@@ -1,4 +1,6 @@
+/* eslint-disable no-console */
 import mongoose from "mongoose";
+
 import { envConfig } from "./env.config.js";
 
 export async function connectDB(): Promise<void> {
@@ -28,8 +30,8 @@ export async function connectDB(): Promise<void> {
       console.log("🔻 MongoDB Disconnected due to app termination");
       process.exit(0);
     });
-
-  } catch (error) {
+  }
+  catch (error) {
     console.error("💀 MongoDB Connection Failed:", error);
     process.exit(1);
   }

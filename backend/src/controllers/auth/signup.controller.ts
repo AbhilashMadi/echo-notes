@@ -1,17 +1,19 @@
-import type { SignupSchema } from "@/validations/schemas/signup.schema.js";
 import type { Context } from "hono";
-import { setCookie } from "hono/cookie";
 
+import { setCookie } from "hono/cookie";
+import { StatusCodes } from "http-status-codes";
+
+import type { SignupSchema } from "@/validations/schemas/signup.schema.js";
+
+import { sendEmail } from "@/config/email-client.config.js";
 import { envConfig } from "@/config/env.config.js";
+import { generateToken } from "@/lib/jwt.js";
 import User from "@/models/user.model.js";
+import { CookieNames } from "@/resources/cookie.resources.js";
+import verifyOtpTemplate from "@/templates/verify-otp.template.js";
 import { generateOTP } from "@/utils/generators.js";
 import { responseHandler } from "@/utils/response.js";
-import { StatusCodes } from "http-status-codes";
-import { CookieNames } from "@/resources/cookie.resources.js";
-import { generateToken } from "@/lib/jwt.js";
 import { getExpirationTime } from "@/utils/time.js";
-import { sendEmail } from "@/config/email-client.config.js";
-import verifyOtpTemplate from "@/templates/verify-otp.template.js";
 
 export default async (c: Context) => {
   try {
@@ -19,12 +21,12 @@ export default async (c: Context) => {
     const { email, password } = await c.req.json<SignupSchema>();
 
     // Check if user already exists
-    let existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ email });
 
     if (existingUser && existingUser.emailVerified) {
       return c.json(
         responseHandler(false, "Email already verified, please login.", null),
-        StatusCodes.CONFLICT
+        StatusCodes.CONFLICT,
       );
     }
 
@@ -37,7 +39,8 @@ export default async (c: Context) => {
       existingUser.emailVerificationOtp = verificationOtp;
       existingUser.password = password;
       savedUser = await existingUser.save();
-    } else {
+    }
+    else {
       // Create new user
       const newUser = new User({ email, password, verificationOtp });
       savedUser = await newUser.save();
@@ -60,9 +63,10 @@ export default async (c: Context) => {
     // Inform client the otp is sent
     return c.json(
       responseHandler(true, "OTP sent successfully. Please verify your email.", null),
-      StatusCodes.OK
+      StatusCodes.OK,
     );
-  } catch (error) {
+  }
+  catch (error) {
     console.error("Signup Error:", error);
     throw error;
   }

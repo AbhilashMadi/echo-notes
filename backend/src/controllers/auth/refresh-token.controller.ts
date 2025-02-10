@@ -1,11 +1,12 @@
 import type { Context } from "hono";
+
 import { getCookie } from "hono/cookie";
 import { StatusCodes } from "http-status-codes";
 
+import { setAuthCookies } from "@/controllers/auth/verify-otp.controller.js";
 import { generateToken, verifyToken } from "@/lib/jwt.js";
 import { CookieNames } from "@/resources/cookie.resources.js";
 import { responseHandler } from "@/utils/response.js";
-import { setAuthCookies } from "@/controllers/auth/verify-otp.controller.js";
 
 export default async (c: Context) => {
   try {
@@ -35,9 +36,10 @@ export default async (c: Context) => {
     // Return new access token
     return c.json(
       responseHandler(true, "Token refreshed successfully"),
-      StatusCodes.OK
+      StatusCodes.OK,
     );
-  } catch (error) {
+  }
+  catch (error) {
     console.warn("Refresh token error: ", error);
     throw error;
   }
