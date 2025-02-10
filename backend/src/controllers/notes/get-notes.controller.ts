@@ -1,12 +1,12 @@
 import type { Context } from "hono";
 
-import { Note } from "@/models/notes.model.js";
+import Note from "@/models/notes.model.js";
 import { responseHandler } from "@/utils/response.js";
 
 export default async (c: Context) => {
   try {
     // Parse and validate query parameters
-    const { sort, page, limit, search, favorite, tags } = c.req.query();
+    const { sort, page, limit, search, favorite, tags, pinned } = c.req.query();
 
     const pageNum = Number.parseInt(page);
     const limitNum = Number.parseInt(limit);
@@ -22,9 +22,15 @@ export default async (c: Context) => {
         { content: { $regex: search, $options: "i" } },
       ];
     }
+
     // Filter by favorite
     if (favorite)
       filter.favorite = favorite === "true";
+
+    // Filter by pinned
+    if (pinned)
+      filter.pinned = pinned === "true";
+
     // Filter by tags (assuming tags are stored as an array in MongoDB)
     if (tags?.length)
       filter.tags = { $in: tags };
@@ -45,6 +51,7 @@ export default async (c: Context) => {
       total: totalCount,
       search,
       favorite,
+      pinned, // ✅ Include pinned in response
       tags,
       notes,
     }));
