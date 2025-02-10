@@ -6,10 +6,13 @@ import { prettyJSON } from "hono/pretty-json";
 // Middlewares
 import cors from "@/config/cors.config.js";
 import { connectDB } from "@/config/db.config.js";
+
 // Connections and configurations
 import { envConfig } from "@/config/env.config.js";
 import authRoutes from "@/routes/auth.route.js";
 import notesRoutes from "@/routes/notes.route.js";
+import cdnRoutes from "@/routes/cdn.route.js";
+
 // Route handlers(Controllers)
 import { notFound, onError } from "@/utils/response.js";
 
@@ -26,6 +29,7 @@ app.use(prettyJSON());
 // API endpoinst entry
 app.route("/api/v1/auth", authRoutes);
 app.route("/api/v1/notes", notesRoutes);
+app.route("/api/v1/cdn", cdnRoutes);
 
 app.onError(onError);
 app.notFound(notFound);

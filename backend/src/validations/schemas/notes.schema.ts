@@ -51,7 +51,7 @@ export const updateNoteSchema = z.object({
   favorite: z.boolean().optional(),
   pinned: z.boolean().optional(),
   tags: z.array(z.string()).optional(),
-});
+}).strict();
 
 export const updateNotesParamsSchema = z.object({
   id: z

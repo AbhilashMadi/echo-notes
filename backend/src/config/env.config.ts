@@ -53,6 +53,14 @@ const envSchema = z.object({
 
   GOOGLE_SMTP_PASSWORD: z.string()
     .min(1, "ZOHO_SMTP_PASSWORD is missing"),
+
+  // CDN Credentials
+  CLOUDINARY_CLOUD_NAME: z.string()
+    .min(1, "CLOUDINARY_CLOUD_NAME is missing from env"),
+  CLOUDINARY_API_KEY: z.string()
+    .min(1, "CLOUDINARY_API_KEY is missing from env"),
+  CLOUDINARY_SECRET_KEY: z.string()
+    .min(1, "CLOUDINARY_SECRET_KEY is missing from env")
 });
 
 // Validate the environment variables

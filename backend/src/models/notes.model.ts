@@ -1,5 +1,4 @@
 import type { Document, Model, Types } from "mongoose";
-
 import mongoose, { Schema } from "mongoose";
 
 export interface INote extends Document {
@@ -16,13 +15,13 @@ export interface INote extends Document {
 
 const NoteSchema = new Schema<INote>(
   {
-    userId: { type: Schema.Types.ObjectId, ref: "User", required: true, index: true },
+    userId: { type: Schema.Types.ObjectId, ref: "User", required: true, index: true }, // Index for fast retrieval
     title: { type: String, required: true, unique: true },
     content: { type: String, required: true }, // Markdown content
     images: { type: [String], default: [] },
-    favorite: { type: Boolean, default: false, index: true },
-    pinned: { type: Boolean, default: false, index: true },
-    tags: { type: [String], default: [], index: true },
+    favorite: { type: Boolean, default: false },
+    pinned: { type: Boolean, default: false },
+    tags: { type: [String], default: [] },
   },
   {
     timestamps: true,
@@ -34,11 +33,17 @@ const NoteSchema = new Schema<INote>(
         return ret;
       },
     }
-  },
+  }
 );
 
-NoteSchema.index({ userId: 1, _id: 1 });
+// 🔥 Indexing for Performance
+// Compound index for retrieving notes by user & sorting by creation time
+NoteSchema.index({ userId: 1, createdAt: -1 });
+// Index tags as multi-key field (each tag is indexed for efficient querying)
+NoteSchema.index({ tags: 1 });
+// Optimized queries for favorite and pinned notes
+NoteSchema.index({ userId: 1, favorite: 1 });
+NoteSchema.index({ userId: 1, pinned: 1 });
 
-// Create and export User model
 const Note: Model<INote> = mongoose.model<INote>("Note", NoteSchema);
 export default Note;
