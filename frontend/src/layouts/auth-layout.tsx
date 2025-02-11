@@ -1,6 +1,6 @@
-import { Navbar } from "@/components/navbar";
+import { Navbar } from "@heroui/navbar";
 
-export default function DefaultLayout({
+export default function AuthLayout({
   children,
 }: {
   children: React.ReactNode;
