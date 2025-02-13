@@ -2,9 +2,9 @@ import { FC, useState, useEffect } from "react";
 import { VisuallyHidden } from "@react-aria/visually-hidden";
 import { SwitchProps, useSwitch } from "@heroui/switch";
 import clsx from "clsx";
+import { Icon } from "@iconify/react";
 
 import { useTheme } from "@/hooks/use-theme";
-import { SunFilledIcon, MoonFilledIcon } from "@/components/icons";
 
 export interface ThemeSwitchProps {
   className?: string;
@@ -74,9 +74,13 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
         })}
       >
         {isSelected ? (
-          <MoonFilledIcon size={22} />
+          // <MoonFilledIcon size={22} />
+          <Icon
+            fontSize={22}
+            icon="line-md:moon-alt-to-sunny-outline-loop-transition"
+          />
         ) : (
-          <SunFilledIcon size={22} />
+          <Icon fontSize={22} icon="line-md:moon-twotone-alt-loop" />
         )}
       </div>
     </Component>

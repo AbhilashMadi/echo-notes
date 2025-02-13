@@ -1,4 +1,8 @@
-export type SiteConfig = typeof siteConfig;
+export enum Paths {
+  INDEX = "/",
+  AUTH = "/auth/:form",
+  NOT_FOUND = "/not-found",
+}
 
 export const siteConfig = {
   name: "Echo Notes",
@@ -13,3 +17,5 @@ export const siteConfig = {
     sponsor: "",
   },
 };
+
+export type SiteConfig = typeof siteConfig;
