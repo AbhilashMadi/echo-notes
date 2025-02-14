@@ -1,15 +1,26 @@
 import { Button, Checkbox, Form, Input, Link } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import React from "react";
+import React, { FormEvent } from "react";
 
 import { Paths } from "@/config/site";
+import { ServerKeys } from "@/resources/serverkeys";
+import { useLoginMutation } from "@/context/auth-api";
 
 export default function LoginForm() {
   const [isVisible, setIsVisible] = React.useState(false);
+  const [login, { isLoading }] = useLoginMutation();
+
   const toggleVisibility = () => setIsVisible(!isVisible);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(e.currentTarget));
+
+    login({
+      [ServerKeys.EMAIL]: data[ServerKeys.EMAIL],
+      [ServerKeys.PASSWORD]: data[ServerKeys.PASSWORD],
+      [ServerKeys.REMEMBER]: ServerKeys.REMEMBER in data,
+    });
   };
 
   return (
@@ -35,7 +46,7 @@ export default function LoginForm() {
             isRequired
             label="Email"
             labelPlacement="outside"
-            name="email"
+            name={ServerKeys.EMAIL}
             placeholder="Enter your email"
             type="email"
             variant="bordered"
@@ -57,15 +68,16 @@ export default function LoginForm() {
                 )}
               </button>
             }
+            errorMessage={"formik.errors[ServerKeys.PASSWORD]"}
             label="Password"
             labelPlacement="outside"
-            name="password"
+            name={ServerKeys.PASSWORD}
             placeholder="Enter your password"
             type={isVisible ? "text" : "password"}
             variant="bordered"
           />
           <div className="flex w-full items-center justify-between px-1 py-2">
-            <Checkbox defaultSelected name="remember" size="sm">
+            <Checkbox defaultSelected name={ServerKeys.REMEMBER} size="sm">
               Remember me
             </Checkbox>
             <Link className="text-default-500" href="#" size="sm">
