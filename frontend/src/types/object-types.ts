@@ -12,4 +12,5 @@ export type UserSchema = {
   [ServerKeys.USERNAME]: string;
   [ServerKeys.CREATED_AT]: string;
   [ServerKeys.UPDATED_AT]: string;
+  [ServerKeys.TAGS]: string[];
 };

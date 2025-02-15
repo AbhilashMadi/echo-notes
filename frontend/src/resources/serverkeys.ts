@@ -6,4 +6,5 @@ export enum ServerKeys {
   USERNAME = "username",
   CREATED_AT = "createdAt",
   UPDATED_AT = "updatedAt",
+  TAGS = "tags",
 }
