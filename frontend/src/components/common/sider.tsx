@@ -11,6 +11,8 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
 
+import SearchInput from "./search-input";
+
 import { ThemeSwitch } from "@/components/common/theme-switch";
 import useAuth from "@/hooks/use-auth";
 import { ServerKeys } from "@/resources/serverkeys";
@@ -217,6 +219,7 @@ export default function Sider() {
             )}
           </div>
         ))}
+        <SearchInput />
       </div>
 
       {/* USER PROFILE & THEME SWITCH */}
