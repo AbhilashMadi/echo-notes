@@ -2,6 +2,7 @@ import { createApi } from "@reduxjs/toolkit/query/react";
 
 import { baseQuery } from "@/lib/base-query-with-re-auth";
 import { ApiResponse } from "@/types/generic-types";
+import { setUser } from "@/context/auth-slice";
 
 export const authApi = createApi({
   reducerPath: "auth-api",
@@ -13,6 +14,18 @@ export const authApi = createApi({
         method: "POST",
         body: { email, password, remember },
       }),
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+
+          if (data.success) {
+            // Set user data in Redux store
+            dispatch(setUser(data.data));
+          }
+        } catch (error) {
+          console.error("Login error:", error);
+        }
+      },
     }),
     signup: builder.mutation<ApiResponse<any>, any>({
       query: ({ username, email, password, confirmPassword }) => ({
@@ -33,6 +46,18 @@ export const authApi = createApi({
         url: "/auth/refresh-token",
         method: "POST",
       }),
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+
+          if (data.success) {
+            // Set user data in Redux store
+            dispatch(setUser(data.data));
+          }
+        } catch (error) {
+          console.error("Login error:", error);
+        }
+      },
     }),
     resendOtp: builder.mutation({
       query: () => ({

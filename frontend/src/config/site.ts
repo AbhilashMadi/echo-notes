@@ -6,6 +6,8 @@ export enum Paths {
   SIGNUP = "/auth/signup",
   OTP = "/auth/otp",
 
+  // Private Routes
+  DASHBOARD = "/dashboard",
   NOT_FOUND = "/not-found",
 }
 

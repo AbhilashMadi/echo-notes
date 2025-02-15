@@ -4,23 +4,29 @@ import React, { FormEvent } from "react";
 
 import { Paths } from "@/config/site";
 import { useLoginMutation } from "@/context/auth-api";
+import useGlobalContext from "@/hooks/context-hooks";
 import { ServerKeys } from "@/resources/serverkeys";
 
 export default function LoginForm() {
   const [isVisible, setIsVisible] = React.useState(false);
   const [login, { isLoading, isError, error }] = useLoginMutation();
+  const { navigate } = useGlobalContext();
 
   const toggleVisibility = () => setIsVisible(!isVisible);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data = Object.fromEntries(new FormData(e.currentTarget));
 
-    login({
+    const { success } = await login({
       [ServerKeys.EMAIL]: data[ServerKeys.EMAIL],
       [ServerKeys.PASSWORD]: data[ServerKeys.PASSWORD],
       [ServerKeys.REMEMBER]: ServerKeys.REMEMBER in data,
-    });
+    }).unwrap();
+
+    if (success) {
+      navigate(Paths.DASHBOARD);
+    }
   };
 
   return (
