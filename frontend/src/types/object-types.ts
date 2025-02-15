@@ -14,3 +14,15 @@ export type UserSchema = {
   [ServerKeys.UPDATED_AT]: string;
   [ServerKeys.TAGS]: string[];
 };
+
+export type NoteSchema = {
+  [ServerKeys.USER_ID]: string;
+  [ServerKeys.TITLE]: string;
+  [ServerKeys.CONTENT]: string;
+  [ServerKeys.IMAGES]: string[];
+  [ServerKeys.FAVORITE]: boolean;
+  [ServerKeys.PINNED]: boolean;
+  [ServerKeys.TAGS]: string[];
+  [ServerKeys.CREATED_AT]: Date;
+  [ServerKeys.UPDATED_AT]: Date;
+};

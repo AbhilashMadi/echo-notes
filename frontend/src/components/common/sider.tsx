@@ -12,6 +12,7 @@ import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
 
 import SearchInput from "./search-input";
+import LogOutButton from "./logout-button";
 
 import { ThemeSwitch } from "@/components/common/theme-switch";
 import useAuth from "@/hooks/use-auth";
@@ -33,6 +34,12 @@ export default function Sider() {
       default: "desc",
     },
     {
+      id: "tags",
+      label: "Tags",
+      type: "tags",
+      default: user?.[ServerKeys.TAGS],
+    },
+    {
       id: "favorite",
       label: "Show Favorites",
       type: "checkbox",
@@ -46,17 +53,12 @@ export default function Sider() {
       default: false,
       icon: "basil:pin-solid",
     },
-    {
-      id: "tags",
-      label: "Tags",
-      type: "tags",
-      default: user?.[ServerKeys.TAGS],
-    },
   ];
 
   // Extract tags from URL params or use default ones
-  const initialTags = filtersSchema.find((f) => f.id === "tags")?.default || [];
-  const [availableTags, setAvailableTags] = useState<string[]>(initialTags);
+  const [availableTags, setAvailableTags] = useState<string[]>(
+    user?.[ServerKeys.TAGS] ?? [],
+  );
   const [selectedTags, setSelectedTags] = useState<string[]>(
     searchParams.get("tags")?.split(",") || [],
   );
@@ -224,7 +226,7 @@ export default function Sider() {
 
       {/* USER PROFILE & THEME SWITCH */}
       <div className="flex justify-between gap-2">
-        <div className="bg-foreground-200 w-full rounded-xl" />
+        <LogOutButton />
         <div className="p-2 flex-center bg-foreground-200 rounded-xl">
           <ThemeSwitch />
         </div>

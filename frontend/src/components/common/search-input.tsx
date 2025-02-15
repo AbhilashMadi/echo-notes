@@ -24,7 +24,7 @@ const SearchInput: FC = () => {
       ref={inputRef}
       className="placeholder:text-xs text-xs"
       endContent={<Kbd keys={["ctrl", "space"]} />}
-      label="Search notes"
+      // label="Search notes"
       labelPlacement="outside"
       placeholder="Press to search 👉🏻"
       startContent={<Icon height="24" icon="hugeicons:search-01" width="24" />}

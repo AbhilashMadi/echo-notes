@@ -1,3 +1,16 @@
+import { useReward } from "react-rewards";
+
 export default function Dashboard() {
-  return <>Dashboard</>;
+  const { reward, isAnimating } = useReward("rewardId", "emoji", {
+    emoji: ["📑", "🧾", "📖"],
+  });
+
+  return (
+    <>
+      <button disabled={isAnimating} onClick={reward}>
+        <span id="rewardId" />
+        🎉
+      </button>
+    </>
+  );
 }

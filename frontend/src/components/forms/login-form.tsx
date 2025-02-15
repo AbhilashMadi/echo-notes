@@ -24,9 +24,7 @@ export default function LoginForm() {
       [ServerKeys.REMEMBER]: ServerKeys.REMEMBER in data,
     }).unwrap();
 
-    if (success) {
-      navigate(Paths.DASHBOARD);
-    }
+    if (success) navigate(Paths.DASHBOARD);
   };
 
   return (

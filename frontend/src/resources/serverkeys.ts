@@ -7,4 +7,10 @@ export enum ServerKeys {
   CREATED_AT = "createdAt",
   UPDATED_AT = "updatedAt",
   TAGS = "tags",
+  USER_ID = "userId",
+  TITLE = "title",
+  CONTENT = "content",
+  IMAGES = "images",
+  FAVORITE = "favorite",
+  PINNED = "pinned",
 }
