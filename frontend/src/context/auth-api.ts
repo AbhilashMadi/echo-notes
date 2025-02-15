@@ -4,6 +4,19 @@ import { baseQuery } from "@/lib/base-query-with-re-auth";
 import { ApiResponse } from "@/types/generic-types";
 import { setUser } from "@/context/auth-slice";
 
+// Reusable function to handle query success
+const handleQuerySuccess = async (queryFulfilled: any, dispatch: any) => {
+  try {
+    const { data } = await queryFulfilled;
+
+    if (data.success) {
+      dispatch(setUser(data.data));
+    }
+  } catch (error) {
+    console.error("Auth API Error:", error);
+  }
+};
+
 export const authApi = createApi({
   reducerPath: "auth-api",
   baseQuery: baseQuery,
@@ -14,18 +27,8 @@ export const authApi = createApi({
         method: "POST",
         body: { email, password, remember },
       }),
-      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled;
-
-          if (data.success) {
-            // Set user data in Redux store
-            dispatch(setUser(data.data));
-          }
-        } catch (error) {
-          console.error("Login error:", error);
-        }
-      },
+      onQueryStarted: (_arg, { dispatch, queryFulfilled }) =>
+        handleQuerySuccess(queryFulfilled, dispatch),
     }),
     signup: builder.mutation<ApiResponse<any>, any>({
       query: ({ username, email, password, confirmPassword }) => ({
@@ -40,24 +43,16 @@ export const authApi = createApi({
         method: "POST",
         body: { otp },
       }),
+      onQueryStarted: (_arg, { dispatch, queryFulfilled }) =>
+        handleQuerySuccess(queryFulfilled, dispatch),
     }),
     refreshToken: builder.mutation({
       query: () => ({
         url: "/auth/refresh-token",
         method: "POST",
       }),
-      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled;
-
-          if (data.success) {
-            // Set user data in Redux store
-            dispatch(setUser(data.data));
-          }
-        } catch (error) {
-          console.error("Login error:", error);
-        }
-      },
+      onQueryStarted: (_arg, { dispatch, queryFulfilled }) =>
+        handleQuerySuccess(queryFulfilled, dispatch),
     }),
     resendOtp: builder.mutation({
       query: () => ({
@@ -70,6 +65,17 @@ export const authApi = createApi({
         url: "/auth/logout",
         method: "POST",
       }),
+      onQueryStarted: async (_arg, { dispatch, queryFulfilled }) => {
+        try {
+          const { data } = await queryFulfilled;
+
+          if (data.success) {
+            dispatch(setUser(null));
+          }
+        } catch (error) {
+          console.error("Logout error:", error);
+        }
+      },
     }),
   }),
 });

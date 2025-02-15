@@ -6,16 +6,16 @@ import {
   useVerifyEmailMutation,
 } from "@/context/auth-api";
 import useGlobalContext from "@/hooks/context-hooks";
+import { Paths } from "@/config/site";
 
 export default function OtpForm() {
   const [otp, setOtp] = useState<string>("");
   const [timeLeft, setTimeLeft] = useState<number>(60);
-  const [isResendDisabled, setIsResendDisabled] = useState<boolean>(true);
   const { navigate } = useGlobalContext();
 
-  const [verify, { isLoading, isSuccess, isError, error }] =
+  const [verify, { isLoading: isVerifying, data, isSuccess, isError, error }] =
     useVerifyEmailMutation();
-  const [resendOtp] = useResendOtpMutation();
+  const [resendOtp, { isLoading: isResending }] = useResendOtpMutation();
 
   // Handle OTP input change
   const handleOtpChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -26,31 +26,39 @@ export default function OtpForm() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
 
-    // Ensure OTP is 6 digits before submitting
     if (otp.length !== 6) return;
 
-    await verify({ otp });
+    try {
+      const response = await verify({ otp }).unwrap();
+
+      if (response.success) {
+        navigate(Paths.DASHBOARD);
+      }
+    } catch (error) {
+      console.error("OTP Verification Error:", error);
+    }
   };
 
   // Handle Resend OTP
   const handleResendOTP = async (): Promise<void> => {
     setTimeLeft(60); // Reset timer
-    setIsResendDisabled(true);
 
-    await resendOtp({});
+    try {
+      await resendOtp({}).unwrap();
+    } catch (error) {
+      console.error("Resend OTP Error:", error);
+    }
   };
 
   // Countdown timer for OTP resend
   useEffect(() => {
-    if (timeLeft > 0) {
-      const timer = setInterval(() => {
-        setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
-      }, 1000);
+    if (timeLeft <= 0) return;
 
-      return () => clearInterval(timer);
-    } else {
-      setIsResendDisabled(false);
-    }
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+
+    return () => clearInterval(timer);
   }, [timeLeft]);
 
   return (
@@ -68,9 +76,7 @@ export default function OtpForm() {
           </span>
         </p>
 
-        {isSuccess && (
-          <Alert color="success" title="✅ OTP Verified Successfully!" />
-        )}
+        {isSuccess && <Alert color="success" title={data?.message} />}
         {isError && (
           <Alert
             color="danger"
@@ -83,10 +89,8 @@ export default function OtpForm() {
             isRequired
             aria-label="OTP input field"
             color={isError ? "danger" : "primary"}
-            isDisabled={isLoading}
+            isDisabled={isVerifying}
             length={6}
-            max={6}
-            min={6}
             name="otp"
             placeholder="Enter code"
             size="lg"
@@ -97,11 +101,11 @@ export default function OtpForm() {
           <Button
             className="w-full"
             color="primary"
-            isDisabled={isLoading || otp.length !== 6}
+            isDisabled={isVerifying || otp.length !== 6}
             type="submit"
             variant="shadow"
           >
-            {isLoading ? "Verifying..." : "Submit"}
+            {isVerifying ? "Verifying..." : "Submit"}
           </Button>
         </Form>
 
@@ -109,27 +113,26 @@ export default function OtpForm() {
           {timeLeft > 0 ? (
             <span className="text-gray-500">
               Magic numbers coming your way… again! after{" "}
-              <strong className="font-mono">{timeLeft}sec</strong>
+              <strong className="font-mono">{timeLeft} sec</strong>
             </span>
           ) : (
             <div className="flex gap-2">
               <Button
                 className="w-full mt-2"
                 color="primary"
-                isDisabled={isResendDisabled}
                 variant="flat"
-                onPress={() => navigate(-1)}
+                onClick={() => navigate(-1)}
               >
                 Go Back
               </Button>
               <Button
                 className="w-full mt-2"
                 color="primary"
-                isDisabled={isResendDisabled}
+                isDisabled={isResending}
                 variant="solid"
-                onPress={handleResendOTP}
+                onClick={handleResendOTP}
               >
-                Resend OTP
+                {isResending ? "Resending..." : "Resend OTP"}
               </Button>
             </div>
           )}
