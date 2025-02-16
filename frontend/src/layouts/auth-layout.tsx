@@ -8,7 +8,7 @@ export default function AuthLayout() {
   const { isAuthenticated } = useAuth();
 
   return isAuthenticated ? (
-    <main className="flex m-16 gap-12 font-primary">
+    <main className="flex p-8 gap-8 font-primary">
       <Sider />
       <div className="flex-grow rounded-2xl bg-foreground-50">
         <Outlet />

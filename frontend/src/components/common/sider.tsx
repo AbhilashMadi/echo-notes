@@ -125,7 +125,7 @@ export default function Sider() {
   };
 
   return (
-    <aside className="w-[250px] rounded-2xl p-4 min-h-[calc(100vh-8rem)] bg-foreground-50 flex flex-col justify-between text-xs">
+    <aside className="w-[250px] rounded-2xl p-4 min-h-[calc(100vh-4rem)] bg-foreground-50 flex flex-col justify-between text-xs">
       <div className="flex flex-col gap-3">
         {/* Checkboxes for specific filtering (by default allowed when false only filtered when checked)*/}
         <Checkbox

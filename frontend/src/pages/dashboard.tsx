@@ -91,7 +91,7 @@ export default function Dashboard() {
   }
 
   return (
-    <section className="p-8 overflow-y-auto transition-all">
+    <section className="p-8 h-full flex flex-col justify-between items-center overflow-y-auto transition-all">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <Mapper<Note>
           comp={(note) => (
