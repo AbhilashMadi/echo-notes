@@ -19,9 +19,9 @@ import LogOutButton from "./logout-button";
 import SearchInput from "./search-input";
 
 import { ThemeSwitch } from "@/components/common/theme-switch";
+import useGlobalContext from "@/hooks/context-hooks";
 import useAuth from "@/hooks/use-auth";
 import { ServerKeys } from "@/resources/serverkeys";
-import useGlobalContext from "@/hooks/context-hooks";
 import { debounce } from "@/utils/idempotency";
 
 export default function Sider() {
@@ -61,14 +61,14 @@ export default function Sider() {
 
   // Function to update searchParams
   const updateSearchParams = (tags: string[]) => {
-    const newParams = new URLSearchParams(searchParams);
-
     if (tags.length === 0) {
-      newParams.delete("tags");
+      searchParams.delete(ServerKeys.TAGS);
     } else {
-      newParams.set("tags", tags.join(","));
+      searchParams.set("tags", tags.join(","));
     }
-    setSearchParams(newParams);
+
+    searchParams.set(ServerKeys.PAGE, "1");
+    setSearchParams(searchParams);
   };
 
   // Function to remove a tag
@@ -91,6 +91,8 @@ export default function Sider() {
       } else {
         searchParams.delete(attribute);
       }
+
+      searchParams.set(ServerKeys.PAGE, "1");
       setSearchParams(searchParams);
     };
   };
@@ -99,6 +101,8 @@ export default function Sider() {
   const defaultSortOrder = searchParams.get(ServerKeys.SORT) ?? "asc";
   const handleTabChange = (key: React.Key) => {
     searchParams.set(ServerKeys.SORT, key.toString());
+
+    searchParams.set(ServerKeys.PAGE, "1");
     setSearchParams(searchParams);
   };
 
@@ -115,6 +119,7 @@ export default function Sider() {
       searchParams.delete(ServerKeys.SEARCH);
     }
 
+    searchParams.set(ServerKeys.PAGE, "1");
     setSearchParams(searchParams);
   };
 

@@ -118,6 +118,7 @@ export default function Dashboard() {
                       size="sm"
                       startContent={
                         <Icon
+                          className="mr-1"
                           height="16"
                           icon="solar:calendar-add-line-duotone"
                           width="16"
@@ -255,6 +256,8 @@ export default function Dashboard() {
             showShadow
             color="primary"
             initialPage={page}
+            page={page}
+            size="sm"
             total={totalPages}
             onChange={handlePageChange}
           />
