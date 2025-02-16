@@ -10,7 +10,7 @@ export default function AuthLayout() {
   return isAuthenticated ? (
     <main className="flex m-16 gap-12 font-primary">
       <Sider />
-      <div className="flex-grow rounded-2xl p-8 bg-foreground-50">
+      <div className="flex-grow rounded-2xl bg-foreground-50">
         <Outlet />
       </div>
     </main>

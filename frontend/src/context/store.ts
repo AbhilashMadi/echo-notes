@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
 
 import { authApi } from "./auth-api";
+import { notesApi } from "./notes-api";
 import authSlice from "./auth-slice";
 
 export const ENV_MODE =
@@ -10,10 +11,15 @@ export const ENV_MODE =
 export const store = configureStore({
   reducer: {
     [authSlice.reducerPath]: authSlice.reducer,
+
     [authApi.reducerPath]: authApi.reducer,
+    [notesApi.reducerPath]: notesApi.reducer,
   },
   middleware: (getDefaultMiddleware) => {
-    return getDefaultMiddleware().concat(authApi.middleware);
+    return getDefaultMiddleware().concat([
+      authApi.middleware,
+      notesApi.middleware,
+    ]);
   },
   devTools: ENV_MODE === "local" && !!window.__REDUX_DEVTOOLS_EXTENSION__,
 });

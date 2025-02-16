@@ -13,7 +13,7 @@ const NotFound = lazy(() => import("@/pages/not-found"));
 const AuthLayout = lazy(() => import("@/layouts/auth-layout"));
 const Dashboard = lazy(() => import("@/pages/dashboard"));
 
-const Loader: FC = () => {
+export const Loader: FC = () => {
   return (
     <main className="min-h-screen w-full flex-center">
       <Spinner label="Loading..." />

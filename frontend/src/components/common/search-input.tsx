@@ -1,8 +1,10 @@
 import { FC, useEffect, useRef } from "react";
-import { Input, Kbd } from "@heroui/react";
+import { Input, InputProps, Kbd } from "@heroui/react";
 import { Icon } from "@iconify/react";
 
-const SearchInput: FC = () => {
+interface ISearchInput extends InputProps { }
+
+const SearchInput: FC<ISearchInput> = (props) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
@@ -21,10 +23,10 @@ const SearchInput: FC = () => {
 
   return (
     <Input
+      {...props}
       ref={inputRef}
       className="placeholder:text-xs text-xs"
       endContent={<Kbd keys={["ctrl", "space"]} />}
-      // label="Search notes"
       labelPlacement="outside"
       placeholder="Press to search 👉🏻"
       startContent={<Icon height="24" icon="hugeicons:search-01" width="24" />}

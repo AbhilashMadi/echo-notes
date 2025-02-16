@@ -13,4 +13,12 @@ export enum ServerKeys {
   IMAGES = "images",
   FAVORITE = "favorite",
   PINNED = "pinned",
+  NOTE_ID = "noteId",
+  TOTAl = "total",
+  SORT = "sort",
+  PAGE = "page",
+  LIMIT = "limit",
+  SEARCH = "search",
+  NOTES = "notes",
+  BODY = "body",
 }

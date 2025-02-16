@@ -1,8 +1,12 @@
-import type { NavigateFunction, NavigateOptions } from "react-router-dom";
+import type {
+  NavigateFunction,
+  NavigateOptions,
+  SetURLSearchParams,
+} from "react-router-dom";
 
-import { createContext } from "react";
+import { createContext, type FC, type ReactNode } from "react";
 import { HeroUIProvider } from "@heroui/system";
-import { useHref, useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Provider as ReduxProvider } from "react-redux";
 
 import { store } from "@/context/store";
@@ -15,22 +19,33 @@ declare module "@react-types/shared" {
 
 export interface IGlobalContextType {
   navigate: NavigateFunction;
+  searchParams: URLSearchParams;
+  setSearchParams: SetURLSearchParams;
 }
 
-export const GlobalContext = createContext<IGlobalContextType>({
-  navigate: () => null,
-});
+export const GlobalContext = createContext<IGlobalContextType | null>(null);
 
-export function Provider({ children }: { children: React.ReactNode }) {
+interface ProviderProps {
+  children: ReactNode;
+}
+
+export const Provider: FC<ProviderProps> = ({ children }) => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const value: IGlobalContextType = {
+    navigate,
+    searchParams,
+    setSearchParams,
+  };
 
   return (
-    <HeroUIProvider navigate={navigate} useHref={useHref}>
+    <HeroUIProvider>
       <ReduxProvider store={store}>
-        <GlobalContext.Provider value={{ navigate }}>
+        <GlobalContext.Provider value={value}>
           {children}
         </GlobalContext.Provider>
       </ReduxProvider>
     </HeroUIProvider>
   );
-}
+};

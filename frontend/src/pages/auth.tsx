@@ -4,6 +4,7 @@ import { Spinner } from "@heroui/react";
 
 import { Paths } from "@/config/site";
 import useAuth from "@/hooks/use-auth";
+import { AnimatedUseCases } from "@/components/custom/text-loop-custom-variants-transition";
 
 const SignupForm = lazy(() => import("@/components/forms/signup-form"));
 const LoginForm = lazy(() => import("@/components/forms/login-form"));
@@ -41,7 +42,7 @@ export default function Auth() {
           dark:bg-[url(/src/assets/images/bg-pattern-black.png)] 
           h-full w-full absolute bg-repeat opacity-30"
         />
-        {/* <AnimatedUseCases /> */}
+        <AnimatedUseCases />
       </div>
 
       {/* Right Side */}
