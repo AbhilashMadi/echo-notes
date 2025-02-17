@@ -28,7 +28,7 @@ const SearchInput: FC<ISearchInput> = (props) => {
       className="placeholder:text-xs text-xs"
       endContent={<Kbd keys={["ctrl", "space"]} />}
       labelPlacement="outside"
-      placeholder="Press to search 👉🏻"
+      placeholder="Search title 👉🏻"
       startContent={<Icon height="24" icon="hugeicons:search-01" width="24" />}
       type="text"
     />

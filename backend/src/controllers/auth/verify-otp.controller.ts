@@ -31,7 +31,7 @@ export async function setAuthCookies(c: Context, accessToken: string, refreshTok
   });
 
   // Auth Config
-  setCookie(c, CookieNames.AUT_CONFIG, JSON.stringify({ remember }), {
+  setCookie(c, CookieNames.AUTH_CONFIG, JSON.stringify({ remember }), {
     httpOnly: true,
     secure: isProd,
     sameSite: "Strict",

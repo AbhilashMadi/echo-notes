@@ -4,13 +4,11 @@ import { Spinner } from "@heroui/react";
 
 import { useLoginMutation, useRefreshTokenMutation } from "./context/auth-api";
 
-import useGlobalContext from "@/hooks/context-hooks";
 import { Paths } from "@/config/site";
 
-const Auth = lazy(() => import("@/pages/auth"));
-const IndexPage = lazy(() => import("@/pages/index"));
-const NotFound = lazy(() => import("@/pages/not-found"));
 const AuthLayout = lazy(() => import("@/layouts/auth-layout"));
+const Auth = lazy(() => import("@/pages/auth"));
+const NotFound = lazy(() => import("@/pages/not-found"));
 const Dashboard = lazy(() => import("@/pages/dashboard"));
 const Note = lazy(() => import("@/pages/note"));
 
@@ -25,7 +23,6 @@ export const Loader: FC = () => {
 function App() {
   const [refreshToken, { isLoading }] = useRefreshTokenMutation();
   const [logout] = useLoginMutation();
-  const { navigate } = useGlobalContext();
 
   const fetchData = async () => {
     // Refresh the tokens
@@ -34,7 +31,6 @@ function App() {
     // If the user haven't logged in before the get him out
     if (error) {
       await logout({});
-      navigate(-1);
     }
   };
 
@@ -55,8 +51,7 @@ function App() {
 
           {/* Protected Routes (Inside AuthLayout) */}
           <Route element={<AuthLayout />}>
-            <Route index element={<IndexPage />} />
-            <Route element={<Dashboard />} path={Paths.DASHBOARD} />
+            <Route index element={<Dashboard />} path={Paths.INDEX} />
             <Route element={<Note />} path={Paths.NOTE} />
           </Route>
 

@@ -48,6 +48,7 @@ export type NotesResponse = {
   [ServerKeys.SEARCH]?: string;
   [ServerKeys.FAVORITE]?: boolean;
   [ServerKeys.PINNED]?: boolean;
-  [ServerKeys.TAGS]?: string[];
+  [ServerKeys.TAGS]: string[];
+  [ServerKeys.FILTER_TAGS]?: string[];
   [ServerKeys.NOTES]: Note[];
 };

@@ -9,6 +9,7 @@ export interface IUser extends Document {
   password: string;
   emailVerificationOtp?: string;
   emailVerified: boolean;
+  username: string;
 
   matchPassword: (enteredPassword: string) => Promise<boolean>;
 }
@@ -34,6 +35,10 @@ const UserSchema = new Schema<IUser>(
     emailVerified: {
       type: Boolean,
       default: false, // Default to false until verification
+    },
+    username: {
+      type: String,
+      default: "",
     },
   },
   {

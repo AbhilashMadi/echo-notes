@@ -18,7 +18,7 @@ import { getExpirationTime } from "@/utils/time.js";
 export default async (c: Context) => {
   try {
     // Parse and validate request body
-    const { email, password } = await c.req.json<SignupSchema>();
+    const { email, password, username } = await c.req.json<SignupSchema>();
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
@@ -31,18 +31,18 @@ export default async (c: Context) => {
     }
 
     // Generate OTP & expiration time
-    const verificationOtp = generateOTP();
+    const emailVerificationOtp = generateOTP();
 
     let savedUser;
     if (existingUser) {
       // Update existing user's OTP and reset password
-      existingUser.emailVerificationOtp = verificationOtp;
+      existingUser.emailVerificationOtp = emailVerificationOtp;
       existingUser.password = password;
       savedUser = await existingUser.save();
     }
     else {
       // Create new user
-      const newUser = new User({ email, password, verificationOtp });
+      const newUser = new User({ email, username, password, emailVerificationOtp });
       savedUser = await newUser.save();
     }
 
@@ -58,7 +58,7 @@ export default async (c: Context) => {
 
     // Send OTP to user's email
     // If the email is not deliveried throughs an errors
-    await sendEmail("abhilashkumar1563@gmail.com", "Welcome to Our Platform 🎉", verifyOtpTemplate(verificationOtp));
+    await sendEmail(email, "Welcome to Our Platform 🎉", verifyOtpTemplate(emailVerificationOtp));
 
     // Inform client the otp is sent
     return c.json(

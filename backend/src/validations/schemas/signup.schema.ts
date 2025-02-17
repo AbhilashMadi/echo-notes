@@ -3,6 +3,12 @@ import { z } from "zod";
 import { Regex } from "@/resources/regex.resource.js";
 
 const signupSchema = z.object({
+  username: z
+    .string()
+    .min(1, "Username is required")
+    .max(30, "Username cannot exceed 30 characters")
+    .regex(/^\w+$/, "Username can only contain letters, numbers, and underscores"),
+
   email: z
     .string()
     .email({ message: "Invalid email address" }),

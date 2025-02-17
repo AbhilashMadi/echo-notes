@@ -21,4 +21,5 @@ export enum ServerKeys {
   SEARCH = "search",
   NOTES = "notes",
   BODY = "body",
+  FILTER_TAGS = "filterTags",
 }

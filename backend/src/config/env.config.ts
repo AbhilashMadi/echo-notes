@@ -60,7 +60,7 @@ const envSchema = z.object({
   CLOUDINARY_API_KEY: z.string()
     .min(1, "CLOUDINARY_API_KEY is missing from env"),
   CLOUDINARY_SECRET_KEY: z.string()
-    .min(1, "CLOUDINARY_SECRET_KEY is missing from env")
+    .min(1, "CLOUDINARY_SECRET_KEY is missing from env"),
 });
 
 // Validate the environment variables

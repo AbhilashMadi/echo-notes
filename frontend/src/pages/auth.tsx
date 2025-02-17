@@ -17,7 +17,7 @@ export default function Auth() {
 
   useLayoutEffect(() => {
     // Redirect the user back if already authonticated
-    if (isAuthenticated) navigate(Paths.DASHBOARD);
+    if (isAuthenticated) navigate(Paths.INDEX);
   }, [isAuthenticated, navigate]);
 
   const renderForm = () => {

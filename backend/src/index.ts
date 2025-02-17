@@ -6,13 +6,11 @@ import { prettyJSON } from "hono/pretty-json";
 // Middlewares
 import cors from "@/config/cors.config.js";
 import { connectDB } from "@/config/db.config.js";
-
 // Connections and configurations
 import { envConfig } from "@/config/env.config.js";
 import authRoutes from "@/routes/auth.route.js";
-import notesRoutes from "@/routes/notes.route.js";
 import cdnRoutes from "@/routes/cdn.route.js";
-
+import notesRoutes from "@/routes/notes.route.js";
 // Route handlers(Controllers)
 import { notFound, onError } from "@/utils/response.js";
 

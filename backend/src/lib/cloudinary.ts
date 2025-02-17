@@ -1,24 +1,23 @@
-import cloudinary from "@/config/cloudinary.config.js";
 import type { UploadApiResponse } from "cloudinary";
+
 import stream from "node:stream";
 
-export const getPublicIdFromUrl = (url: string): string | null => {
+import cloudinary from "@/config/cloudinary.config.js";
+
+export function getPublicIdFromUrl(url: string): string | null {
   try {
     // Extracts part after `/v{version}/` and removes extension
     const regex = /\/v\d+\/(.+)\.\w+$/;
     const match = url.match(regex);
 
     return match ? match[1] : null;
-  } catch (error) {
+  }
+  catch (error) {
     throw new Error(`Error extracting public ID: ${url}`);
   }
-};
+}
 
-export const uploadToCloudinary = async (
-  buffer: Buffer,
-  fileName?: string,
-  folder: string = "echo_notes",
-): Promise<UploadApiResponse> => {
+export async function uploadToCloudinary(buffer: Buffer, fileName?: string, folder: string = "echo_notes"): Promise<UploadApiResponse> {
   return new Promise<UploadApiResponse>((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
       {
@@ -35,29 +34,32 @@ export const uploadToCloudinary = async (
           { flags: "progressive" }, // Progressive rendering
           { dpr: "auto" }, // Adjust resolution based on device
           { effect: "sharpen" }, // Improve clarity after compression
-        ]
+        ],
       },
       (error, result) => {
-        if (error) reject(error);
-        else if (result) resolve(result);
+        if (error)
+          reject(error);
+        else if (result)
+          resolve(result);
         else reject(new Error("Upload failed with no error message"));
-      }
+      },
     );
 
     const bufferStream = new stream.PassThrough();
     bufferStream.end(buffer);
     bufferStream.pipe(uploadStream);
-  }).then((result) => result);
-};
+  }).then(result => result);
+}
 
-export const deleteFromCloudinary = async (url: string): Promise<boolean> => {
+export async function deleteFromCloudinary(url: string): Promise<boolean> {
   const publicId = getPublicIdFromUrl(url)!;
   const result = await cloudinary.uploader.destroy(publicId);
   if (result.result === "ok") {
-    console.log(`✅ Successfully deleted: ${publicId}`);
+    console.log(`Successfully deleted: ${publicId}`);
     return true;
-  } else {
+  }
+  else {
     console.error(`🐞 Failed to delete: ${publicId} - ${result.result}`);
     return false;
   }
-};
+}
