@@ -12,6 +12,7 @@ const IndexPage = lazy(() => import("@/pages/index"));
 const NotFound = lazy(() => import("@/pages/not-found"));
 const AuthLayout = lazy(() => import("@/layouts/auth-layout"));
 const Dashboard = lazy(() => import("@/pages/dashboard"));
+const Note = lazy(() => import("@/pages/note"));
 
 export const Loader: FC = () => {
   return (
@@ -56,6 +57,7 @@ function App() {
           <Route element={<AuthLayout />}>
             <Route index element={<IndexPage />} />
             <Route element={<Dashboard />} path={Paths.DASHBOARD} />
+            <Route element={<Note />} path={Paths.NOTE} />
           </Route>
 
           {/* Catch-All Not Found Route */}

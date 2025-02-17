@@ -10,6 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@blocknote/core": "^0.23.6",
+    "@blocknote/mantine": "^0.23.6",
+    "@blocknote/react": "^0.23.6",
     "@heroui/button": "2.2.9",
     "@heroui/code": "2.2.6",
     "@heroui/dropdown": "2.3.9",
