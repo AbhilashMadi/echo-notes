@@ -80,9 +80,9 @@ const NoteCard: FC<{ note: Note }> = ({ note }) => {
       </CardHeader>
       <CardBody className="text-foreground-400">
         <ul>
-          {note?.[ServerKeys.CONTENT].map((o, i: number) => (
-            <li key={i}>{o?.[ServerKeys.CONTENT]}</li>
-          ))}
+          {note?.[ServerKeys.CONTENT]
+            .slice(0, 6)
+            .map((o, i: number) => <li key={i}>{o?.[ServerKeys.CONTENT]}</li>)}
         </ul>
       </CardBody>
       <CardFooter className="flex flex-col items-start">
