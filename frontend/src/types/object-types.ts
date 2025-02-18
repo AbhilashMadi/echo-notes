@@ -30,7 +30,7 @@ export type NoteSchema = {
 export type Note = {
   [ServerKeys.NOTE_ID]: string;
   [ServerKeys.TITLE]: string;
-  [ServerKeys.CONTENT]: string;
+  [ServerKeys.CONTENT]: any[];
   [ServerKeys.IMAGES]: string[];
   [ServerKeys.FAVORITE]: boolean;
   [ServerKeys.PINNED]: boolean;

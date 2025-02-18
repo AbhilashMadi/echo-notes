@@ -50,7 +50,7 @@ export default function Dashboard() {
     <main className="flex p-8 gap-8 font-primary">
       <Sider />
       <section className="p-8 w-full bg-foreground-50 rounded-2xl flex flex-col justify-between items-center overflow-y-auto transition-all">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
           <Mapper<Note>
             comp={(note) => <NoteCard note={note} />}
             data={notes}

@@ -1,4 +1,3 @@
-import { BlockNoteView } from "@blocknote/mantine";
 import { useCreateBlockNote } from "@blocknote/react";
 import {
   Card,
@@ -12,7 +11,8 @@ import {
 } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import clsx from "clsx";
-import { FC, useCallback, useState, useEffect } from "react";
+import { FC, useCallback, useState } from "react";
+import { Link } from "react-router-dom";
 
 import Highlighter from "./highlighter";
 
@@ -60,29 +60,18 @@ const NoteCard: FC<{ note: Note }> = ({ note }) => {
 
   const handleDeleteNote = useCallback(
     debounce(async (noteId: string): Promise<void> => {
-      toggleDeletePop();
       await deleteNote({ noteId });
+      setOpenDeletePop(false);
     }, 500),
     [],
   );
 
-  const editor = useCreateBlockNote();
-
-  // For initialization; on mount, convert the initial Markdown to blocks and replace the default editor's content
-  useEffect(() => {
-    const loadInitialHTML = async () => {
-      const blocks = await editor.tryParseMarkdownToBlocks(
-        note?.[ServerKeys.CONTENT],
-      );
-
-      editor.replaceBlocks(editor.document, blocks);
-    };
-
-    loadInitialHTML();
-  }, [editor]);
+  const editor = useCreateBlockNote({
+    initialContent: note?.[ServerKeys.CONTENT],
+  });
 
   return (
-    <Card key={note.noteId} className="p-4 rounded-lg text-xs relative">
+    <Card className="p-4 rounded-lg text-xs relative">
       <CardHeader className="font-semibold text-sm text-clip-2">
         <Highlighter
           highlightText={searchParams.get(ServerKeys.SEARCH) || ""}
@@ -90,9 +79,11 @@ const NoteCard: FC<{ note: Note }> = ({ note }) => {
         />
       </CardHeader>
       <CardBody className="text-foreground-400">
-        <p className="line-clamp-3">
-          <BlockNoteView editable={false} editor={editor} />
-        </p>
+        <ul>
+          {note?.[ServerKeys.CONTENT].map((o, i: number) => (
+            <li key={i}>{o?.[ServerKeys.CONTENT]}</li>
+          ))}
+        </ul>
       </CardBody>
       <CardFooter className="flex flex-col items-start">
         <div className="py-2 text-clip-2">
@@ -175,6 +166,11 @@ const NoteCard: FC<{ note: Note }> = ({ note }) => {
                 <Icon height="16" icon="solar:star-bold-duotone" width="16" />
               )}
             </button>
+            <Link to={`/note/${note?.[ServerKeys.NOTE_ID]}`}>
+              <button className="bg-foreground-200 p-1 border-l-1 border-foreground-50 hover:bg-warning-300">
+                <Icon height="16" icon="solar:eye-broken" width="16" />
+              </button>
+            </Link>
             <Popover showArrow backdrop="opaque" isOpen={openDeletePop}>
               <PopoverTrigger>
                 <button
