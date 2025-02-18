@@ -17,7 +17,10 @@ const Highlighter: React.FC<HighlighterProps> = ({ text, highlightText }) => {
     <div>
       {parts.map((part, index) =>
         regex.test(part) ? (
-          <span key={index} className="bg-warning-100 px-0.5 rounded-sm">
+          <span
+            key={index}
+            className="bg-warning-100 px-0.5 rounded-sm border border-dashed border-yellow-600"
+          >
             {part}
           </span>
         ) : (
