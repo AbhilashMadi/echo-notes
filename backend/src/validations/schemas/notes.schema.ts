@@ -154,7 +154,7 @@ export const createNoteSchema = z.object({
 export const updateNoteSchema = z.object({
   // noteId: z.string({ message: "NoteId is required for updating it" }).min(1, "NoteId is required for updating it"),
   title: z.string().min(1, "Title is required").max(255).optional(),
-  content: blockNoteContentSchema,
+  content: z.string().optional(),
   images: z.array(z.string().url()).optional(),
   favorite: z.boolean().optional(),
   pinned: z.boolean().optional(),
