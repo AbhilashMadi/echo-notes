@@ -1,10 +1,16 @@
 import { cors } from "hono/cors";
 
-// CORS Configuration
+import { envConfig } from "@/config/env.config.js";
+
 export default cors({
-  origin: "http://example.com",
-  allowHeaders: ["X-Custom-Header", "Upgrade-Insecure-Requests"],
-  allowMethods: ["POST", "GET", "OPTIONS"],
+  origin: envConfig.CORS_ORIGIN,
+  allowHeaders: [
+    "X-Custom-Header",
+    "Upgrade-Insecure-Requests",
+    "Content-Type",
+    "Authorization",
+  ],
+  allowMethods: ["POST", "GET", "PATCH", "DELETE", "PUT", "OPTIONS"],
   exposeHeaders: ["Content-Length", "X-Kuma-Revision"],
   maxAge: 600,
   credentials: true,

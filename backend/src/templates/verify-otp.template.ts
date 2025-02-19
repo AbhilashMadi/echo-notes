@@ -66,7 +66,7 @@ export default (otp: string) => {
             <h1>Verify Your Email</h1>
             <p>Your One-Time Password (OTP) is:</p>
             <p class="otp-code">${otp}</p>
-            <p>This OTP is valid for <strong>${Number.parseInt(envConfig.VERFIICATION_TOKEN_EXP)}</strong> minutes. Do not share it with anyone.</p>
+            <p>This OTP is valid for <strong>${Number.parseInt(envConfig.VERIFIICATION_TOKEN_EXP)}</strong> minutes. Do not share it with anyone.</p>
         </div>
         <div class="footer">
             <p>If you didn’t request this, please ignore this email.</p>

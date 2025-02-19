@@ -8,6 +8,21 @@
     --font-secondary: "Space Mono", serif;
     --font-ternary: "Caveat", serif;
   }
+
+  /* Custom Thin Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: rgba(100, 100, 100, 0.5);
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
 }
 
 @layer utilities {

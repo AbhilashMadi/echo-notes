@@ -1,11 +1,15 @@
 export enum Paths {
-  INDEX = "/",
+  // Auth Routes
   AUTH = "/auth/:form",
-
   LOGIN = "/auth/login",
   SIGNUP = "/auth/signup",
   OTP = "/auth/otp",
 
+  // Private Routes
+  NOTE = "/note/:noteId",
+  INDEX = "/",
+
+  // Public Routes
   NOT_FOUND = "/not-found",
 }
 

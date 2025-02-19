@@ -44,7 +44,7 @@ export default async (c: Context) => {
     setAuthCookies(c, accessToken, refreshToken, remember);
 
     // Exclude sensitive data before sending response
-    return c.json(responseHandler(true, "Login successful ✅ Welcome back!", user), StatusCodes.OK);
+    return c.json(responseHandler(true, "Login successful, Welcome back!", user), StatusCodes.OK);
   }
   catch (error) {
     console.error("Login Error:", error);

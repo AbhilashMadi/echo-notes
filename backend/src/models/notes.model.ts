@@ -1,10 +1,13 @@
 import type { Document, Model, Types } from "mongoose";
+
 import mongoose, { Schema } from "mongoose";
+
+import type { BlockNoteContentSchema } from "@/validations/schemas/notes.schema.js";
 
 export interface INote extends Document {
   userId: Types.ObjectId;
   title: string;
-  content: string;
+  content: BlockNoteContentSchema[];
   images: string[];
   favorite: boolean;
   pinned: boolean;
@@ -15,9 +18,9 @@ export interface INote extends Document {
 
 const NoteSchema = new Schema<INote>(
   {
-    userId: { type: Schema.Types.ObjectId, ref: "User", required: true, index: true }, // Index for fast retrieval
-    title: { type: String, required: true, unique: true },
-    content: { type: String, required: true }, // Markdown content
+    userId: { type: Schema.Types.ObjectId, ref: "User", required: true, index: true },
+    title: { type: String, required: true },
+    content: { type: Schema.Types.Mixed, default: [] },
     images: { type: [String], default: [] },
     favorite: { type: Boolean, default: false },
     pinned: { type: Boolean, default: false },
@@ -32,16 +35,32 @@ const NoteSchema = new Schema<INote>(
         delete ret.__v;
         return ret;
       },
-    }
-  }
+    },
+  },
 );
 
-// 🔥 Indexing for Performance
-// Compound index for retrieving notes by user & sorting by creation time
+// // Middleware to update user's tags when a note is saved
+// NoteSchema.pre<INote>("save", async function (next) {
+//   if (this.isModified("tags") && this.tags.length > 0) {
+//     try {
+//       // Sort tags alphabetically before saving
+//       this.tags = [...new Set(this.tags)].sort((a, b) => a.localeCompare(b));
+
+//       await User.findByIdAndUpdate(this.userId, {
+//         // To Avoid duplicate tags
+//         $addToSet: { tags: { $each: this.tags } },
+//       });
+//     }
+//     catch (error: any) {
+//       return next(error);
+//     }
+//   }
+//   next();
+// });
+
+// Indexing for Performance
 NoteSchema.index({ userId: 1, createdAt: -1 });
-// Index tags as multi-key field (each tag is indexed for efficient querying)
 NoteSchema.index({ tags: 1 });
-// Optimized queries for favorite and pinned notes
 NoteSchema.index({ userId: 1, favorite: 1 });
 NoteSchema.index({ userId: 1, pinned: 1 });
 

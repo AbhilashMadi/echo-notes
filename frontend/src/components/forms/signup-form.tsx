@@ -1,17 +1,29 @@
-"use client";
-
-import React from "react";
+import React, { FormEvent } from "react";
 import { Button, Input, Link } from "@heroui/react";
 import { Icon } from "@iconify/react";
+import { Alert } from "@heroui/alert";
 
 import { Paths } from "@/config/site";
+import { useSignupMutation } from "@/context/auth-api";
+import useGlobalContext from "@/hooks/context-hooks";
 
 export default function SignupForm() {
   const [isVisible, setIsVisible] = React.useState(false);
   const [isConfirmVisible, setIsConfirmVisible] = React.useState(false);
+  const [register, { isLoading, isError, error }] = useSignupMutation();
+  const { navigate } = useGlobalContext();
 
   const toggleVisibility = () => setIsVisible(!isVisible);
   const toggleConfirmVisibility = () => setIsConfirmVisible(!isConfirmVisible);
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const { data } = await register(
+      Object.fromEntries(new FormData(e.currentTarget)),
+    );
+
+    if (data?.success) navigate(Paths.OTP);
+  };
 
   return (
     <div className="flex h-full w-full items-center justify-center">
@@ -19,12 +31,10 @@ export default function SignupForm() {
         <p className="pb-4 text-left text-3xl font-semibold">
           Your ideas deserve better than napkins!
         </p>
-        <form
-          className="flex flex-col gap-4"
-          onSubmit={(e) => e.preventDefault()}
-        >
+        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           <Input
             isRequired
+            disabled={isLoading}
             label="Username"
             labelPlacement="outside"
             name="username"
@@ -34,6 +44,7 @@ export default function SignupForm() {
           />
           <Input
             isRequired
+            disabled={isLoading}
             label="Email"
             labelPlacement="outside"
             name="email"
@@ -43,6 +54,7 @@ export default function SignupForm() {
           />
           <Input
             isRequired
+            disabled={isLoading}
             endContent={
               <button type="button" onClick={toggleVisibility}>
                 {isVisible ? (
@@ -67,6 +79,7 @@ export default function SignupForm() {
           />
           <Input
             isRequired
+            disabled={isLoading}
             endContent={
               <button type="button" onClick={toggleConfirmVisibility}>
                 {isConfirmVisible ? (
@@ -89,7 +102,20 @@ export default function SignupForm() {
             type={isConfirmVisible ? "text" : "password"}
             variant="bordered"
           />
-          <Button color="primary" type="submit">
+          {isError && (
+            <Alert
+              color="danger"
+              description={
+                <ul className="text-xs list-disc list-inside">
+                  {error?.data?.error?.messages?.map((s: string, i: number) => (
+                    <li key={i}>{s}</li>
+                  ))}
+                </ul>
+              }
+              title={error?.data?.message}
+            />
+          )}
+          <Button color="primary" isLoading={isLoading} type="submit">
             Sign Up
           </Button>
         </form>
