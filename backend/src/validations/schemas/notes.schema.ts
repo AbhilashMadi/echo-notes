@@ -34,18 +34,39 @@ export const getNotesQuerySchema = z.object({
 
 // Zod schema for creating new note
 export const createNoteSchema = z.object({
+<<<<<<< Updated upstream
   title: z.string().min(1, "Title is required").max(255),
   content: z.string().min(1, "Content is required"),
   images: z.array(z.string().url()).optional().default([]),
   favorite: z.boolean().optional().default(false),
   pinned: z.boolean().optional().default(false),
   tags: z.array(z.string()).optional().default([]), // Must be an array of strings
+=======
+  title: z.string()
+    .min(1, "Title is required")
+    .max(255)
+    .trim(),
+  // content: z.array(z.any()),
+  content: z.string().min(1, "Content can't be empty"),
+  images: z.array(z.string().url()).optional().default([]), // Must be valid URLs
+  favorite: z.boolean().optional().default(false), // Defaults to false
+  pinned: z.boolean().optional().default(false), // Defaults to false
+  tags: z.array(z.string().trim().min(1)).max(10).optional().default([]),
+>>>>>>> Stashed changes
 });
 
 // Zod schema for note update
 export const updateNoteSchema = z.object({
   // noteId: z.string({ message: "NoteId is required for updating it" }).min(1, "NoteId is required for updating it"),
   title: z.string().min(1, "Title is required").max(255).optional(),
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+  // content: z.array(z.any()).optional(),
+>>>>>>> Stashed changes
+=======
+  // content: z.array(z.any()).optional(),
+>>>>>>> Stashed changes
   content: z.string().optional(),
   images: z.array(z.string().url()).optional(),
   favorite: z.boolean().optional(),

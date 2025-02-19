@@ -36,8 +36,15 @@ const NoteSchema = new Schema<INote>(
   }
 );
 
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
 // 🔥 Indexing for Performance
 // Compound index for retrieving notes by user & sorting by creation time
+=======
+=======
+>>>>>>> Stashed changes
+// Indexing for Performance
+>>>>>>> Stashed changes
 NoteSchema.index({ userId: 1, createdAt: -1 });
 // Index tags as multi-key field (each tag is indexed for efficient querying)
 NoteSchema.index({ tags: 1 });
