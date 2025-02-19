@@ -2,42 +2,74 @@ import "@blocknote/core/fonts/inter.css";
 import "@blocknote/mantine/style.css";
 
 import { BlockNoteView } from "@blocknote/mantine";
-import { useCreateBlockNote } from "@blocknote/react";
+import {
+  DragHandleButton,
+  SideMenu,
+  SideMenuController,
+  SideMenuProps,
+  useBlockNoteEditor,
+  useComponentsContext,
+  useCreateBlockNote,
+} from "@blocknote/react";
+import { Icon } from "@iconify/react/dist/iconify.js";
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 
+import { useGetNoteQuery } from "@/context/notes-api";
 import { useTheme } from "@/hooks/use-theme";
+
+// Custom Side Menu button to remove the hovered block.
+export function RemoveBlockButton(props: SideMenuProps) {
+  const editor = useBlockNoteEditor();
+  const Components = useComponentsContext()!;
+
+  return (
+    <Components.SideMenu.Button
+      icon={
+        <Icon
+          height="20"
+          icon="solar:trash-bin-trash-bold-duotone"
+          width="20"
+          onClick={() => editor.removeBlocks([props.block])}
+        />
+      }
+      label="Remove block"
+    />
+  );
+}
 
 export default function Editor() {
   const { theme } = useTheme();
+  const { noteId = "" } = useParams();
 
-  const editor = useCreateBlockNote({
-    initialContent: [
-      {
-        type: "heading",
-        content: "Welcome to this demo!",
-      },
-      {
-        type: "paragraph",
-        content: "You'll see that the text is now blue",
-      },
-      {
-        type: "paragraph",
-        content:
-          "Press the '/' key - the hovered Slash Menu items are also blue",
-      },
-      {
-        type: "paragraph",
-      },
-    ],
-  });
+  const { isLoading, data: response } = useGetNoteQuery({ noteId });
+  const editor = useCreateBlockNote();
+
+  // For initialization; on mount, convert the initial Markdown to blocks and replace the default editor's content
+  useEffect(() => {
+    async function loadInitialHTML() {
+      const blocks = await editor.tryParseMarkdownToBlocks(
+        response?.data?.note?.content,
+      );
+
+      editor.replaceBlocks(editor.document, blocks);
+    }
+    loadInitialHTML();
+  }, [editor, response]);
 
   return (
-    <main className="bg-[#1f1f1f] py-8 overflow-hidden rounded-2xl h-[calc(100dvh-4rem)] overflow-y-scroll">
-      <BlockNoteView
-        className="text-xs"
-        contentEditable={false}
-        editor={editor}
-        theme={theme}
-      />
+    <main className="p-4 overflow-hidden rounded-2xl h-[calc(100dvh-4rem)] overflow-y-scroll">
+      <BlockNoteView editor={editor} sideMenu={false} theme={theme}>
+        <SideMenuController
+          sideMenu={(props) => (
+            <SideMenu {...props}>
+              {/* Button which removes the hovered block. */}
+              <RemoveBlockButton {...props} />
+              <DragHandleButton {...props} />
+            </SideMenu>
+          )}
+        />
+      </BlockNoteView>
     </main>
   );
 }

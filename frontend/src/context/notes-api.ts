@@ -60,6 +60,11 @@ export const notesApi = createApi({
       }),
       invalidatesTags: ["NOTES"],
     }),
+
+    // eslint-disable-next-line prettier/prettier
+    getNote: builder.query<ApiResponse<{ note: Note; noteId: string; userId: string; }>, { noteId: string }>({
+      query: ({ noteId }) => `/notes/${noteId}`,
+    }),
   }),
 });
 
@@ -69,4 +74,5 @@ export const {
   useDeleteNoteMutation,
   useFavoriteNoteMutation,
   usePinNoteMutation,
+  useGetNoteQuery,
 } = notesApi;

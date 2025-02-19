@@ -6,7 +6,7 @@ export enum Paths {
   OTP = "/auth/otp",
 
   // Private Routes
-  NOTE = "/note/:id",
+  NOTE = "/note/:noteId",
   INDEX = "/",
 
   // Public Routes

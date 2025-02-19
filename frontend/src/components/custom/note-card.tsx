@@ -1,13 +1,12 @@
-import { useCreateBlockNote } from "@blocknote/react";
 import {
   Card,
-  CardHeader,
   CardBody,
   CardFooter,
+  CardHeader,
   Chip,
   Popover,
-  PopoverTrigger,
   PopoverContent,
+  PopoverTrigger,
 } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import clsx from "clsx";
@@ -16,16 +15,16 @@ import { Link } from "react-router-dom";
 
 import Highlighter from "./highlighter";
 
-import { formatDate } from "@/utils/time-utils";
-import { debounce } from "@/utils/idempotency";
-import { Note } from "@/types/object-types";
-import { ServerKeys } from "@/resources/serverkeys";
-import useGlobalContext from "@/hooks/context-hooks";
 import {
   useDeleteNoteMutation,
   useFavoriteNoteMutation,
   usePinNoteMutation,
 } from "@/context/notes-api";
+import useGlobalContext from "@/hooks/context-hooks";
+import { ServerKeys } from "@/resources/serverkeys";
+import { Note } from "@/types/object-types";
+import { debounce } from "@/utils/idempotency";
+import { formatDate } from "@/utils/time-utils";
 
 const NoteCard: FC<{ note: Note }> = ({ note }) => {
   const { searchParams } = useGlobalContext();
@@ -66,10 +65,6 @@ const NoteCard: FC<{ note: Note }> = ({ note }) => {
     [],
   );
 
-  const editor = useCreateBlockNote({
-    initialContent: note?.[ServerKeys.CONTENT],
-  });
-
   return (
     <Card className="p-4 rounded-lg text-xs relative">
       <CardHeader className="font-semibold text-sm text-clip-2">
@@ -79,14 +74,10 @@ const NoteCard: FC<{ note: Note }> = ({ note }) => {
         />
       </CardHeader>
       <CardBody className="text-foreground-400">
-        <ul>
-          {note?.[ServerKeys.CONTENT]
-            .slice(0, 6)
-            .map((o, i: number) => <li key={i}>{o?.[ServerKeys.CONTENT]}</li>)}
-        </ul>
+        <p className="line-clamp-3">{note?.[ServerKeys.CONTENT]}</p>
       </CardBody>
       <CardFooter className="flex flex-col items-start">
-        <div className="py-2 text-clip-2">
+        <div className="py-2 line-clamp-3">
           <b>Tags: </b>
           <span className="text-primary-500 ml-1">
             {note.tags.map((t) => (
