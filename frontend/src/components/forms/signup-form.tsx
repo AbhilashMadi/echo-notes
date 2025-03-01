@@ -1,7 +1,7 @@
 import React, { FormEvent } from "react";
 import { Button, Input, Link } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import { Alert } from "@heroui/alert";
+import { Alert } from "@heroui/react";
 
 import { Paths } from "@/config/site";
 import { useSignupMutation } from "@/context/auth-api";
