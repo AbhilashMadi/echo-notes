@@ -107,11 +107,13 @@ export default function SignupForm() {
               color="danger"
               description={
                 <ul className="text-xs list-disc list-inside">
+                  {/* @ts-ignore */}
                   {error?.data?.error?.messages?.map((s: string, i: number) => (
                     <li key={i}>{s}</li>
                   ))}
                 </ul>
               }
+              // @ts-ignore
               title={error?.data?.message}
             />
           )}

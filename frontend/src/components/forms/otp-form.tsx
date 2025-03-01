@@ -32,7 +32,7 @@ export default function OtpForm() {
       const response = await verify({ otp }).unwrap();
 
       if (response.success) {
-        navigate(Paths.DASHBOARD);
+        navigate(Paths.INDEX);
       }
     } catch (error) {
       console.error("OTP Verification Error:", error);
@@ -80,6 +80,7 @@ export default function OtpForm() {
         {isError && (
           <Alert
             color="danger"
+            //@ts-ignore
             title={error?.data?.message || "Invalid OTP. Try again!"}
           />
         )}

@@ -2,7 +2,7 @@ import { FC, useEffect, useRef } from "react";
 import { Input, InputProps, Kbd } from "@heroui/react";
 import { Icon } from "@iconify/react";
 
-interface ISearchInput extends InputProps { }
+interface ISearchInput extends InputProps {}
 
 const SearchInput: FC<ISearchInput> = (props) => {
   const inputRef = useRef<HTMLInputElement | null>(null);

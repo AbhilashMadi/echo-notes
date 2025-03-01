@@ -42,13 +42,14 @@ export default function Editor() {
   const { theme } = useTheme();
   const { noteId = "" } = useParams();
 
-  const { isLoading, data: response } = useGetNoteQuery({ noteId });
+  const { data: response } = useGetNoteQuery({ noteId });
   const editor = useCreateBlockNote();
 
   // For initialization; on mount, convert the initial Markdown to blocks and replace the default editor's content
   useEffect(() => {
     async function loadInitialHTML() {
       const blocks = await editor.tryParseMarkdownToBlocks(
+        //@ts-ignore
         response?.data?.note?.content,
       );
 

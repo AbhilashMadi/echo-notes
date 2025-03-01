@@ -24,7 +24,7 @@ export default function LoginForm() {
       [ServerKeys.REMEMBER]: ServerKeys.REMEMBER in data,
     }).unwrap();
 
-    if (success) navigate(Paths.DASHBOARD);
+    if (success) navigate(Paths.INDEX);
   };
 
   return (
@@ -93,11 +93,13 @@ export default function LoginForm() {
               color="danger"
               description={
                 <ul className="text-xs list-disc list-inside">
+                  {/* @ts-ignore */}
                   {error?.data?.error?.messages.map((s: string, i: number) => (
                     <li key={i}>{s}</li>
                   ))}
                 </ul>
               }
+              //@ts-ignore
               title={error?.data?.message}
             />
           )}
