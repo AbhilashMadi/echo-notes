@@ -2,7 +2,7 @@ import { type FC, lazy, Suspense, useLayoutEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import { Spinner } from "@heroui/react";
 
-import { useLoginMutation, useRefreshTokenMutation } from "./context/auth-api";
+import { useLogoutMutation, useRefreshTokenMutation } from "./context/auth-api";
 
 import { Paths } from "@/config/site";
 
@@ -22,7 +22,7 @@ export const Loader: FC = () => {
 
 function App() {
   const [refreshToken, { isLoading }] = useRefreshTokenMutation();
-  const [logout] = useLoginMutation();
+  const [logout] = useLogoutMutation();
 
   const fetchData = async () => {
     // Refresh the tokens

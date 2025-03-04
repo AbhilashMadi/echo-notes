@@ -39,7 +39,6 @@ const NoteSchema = new Schema<INote>(
   },
 );
 
-<<<<<<< HEAD
 // // Middleware to update user's tags when a note is saved
 // NoteSchema.pre<INote>("save", async function (next) {
 //   if (this.isModified("tags") && this.tags.length > 0) {
@@ -60,17 +59,8 @@ const NoteSchema = new Schema<INote>(
 // });
 
 // Indexing for Performance
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-// 🔥 Indexing for Performance
 // Compound index for retrieving notes by user & sorting by creation time
-=======
-=======
->>>>>>> Stashed changes
 // Indexing for Performance
->>>>>>> Stashed changes
->>>>>>> e0df7f58fa464b5059b37225c0c777d987bcd2c0
 NoteSchema.index({ userId: 1, createdAt: -1 });
 NoteSchema.index({ tags: 1 });
 NoteSchema.index({ userId: 1, favorite: 1 });
